@@ -1,26 +1,120 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 <Container version="2">
   <Name>fritzinfluxdb</Name>
   <Repository>bbricardo/fritzinfluxdb:latest</Repository>
   <Registry>https://hub.docker.com/r/bbricardo/fritzinfluxdb</Registry>
-  <Network>.</Network>
-  <MyIP>10..0.4</MyIP>
+  <Network>bridge</Network>
+  <MyIP/>
   <Shell>sh</Shell>
   <Privileged>false</Privileged>
-  <Support></Support>
+  <Support>https://forums.unraid.net/forum/47-docker-containers/</Support>
   <Project></Project>
-  <Overview>This container retrieves call and connection data from a Fritz!Box router and pushes it to an InfluxDB database. The data can then be visualized using tools like Grafana. Ideal for home network monitoring and statistics collection.</Overview>
-  <Category>Network:Monitoring</Category>
-  <WebUI></WebUI>
-  <TemplateURL></TemplateURL>
-  <Icon></Icon>
-  <ExtraParams></ExtraParams>
-  <PostArgs></PostArgs>
-  <CPUset></CPUset>
-  <DonateText></DonateText>
-  <DonateLink></DonateLink>
-  <Requires></Requires>
+  <Overview>
+    This container retrieves call and connection data from a Fritz!Box router and pushes it to an InfluxDB database. The data can then be visualized using tools like Grafana. Ideal for home network monitoring and statistics collection.
+    
+    [br][br][b][u][span style='color: #E80000;']Configuration[/span][/u][/b][br]
 
+    [b]FRITZBOX_USERNAME[/b]: Your Fritz!Box login username.[br]
+    [b]FRITZBOX_PASSWORD[/b]: Your Fritz!Box login password.[br]
+    [b]INFLUXDB_VERSION[/b]: InfluxDB version (1 or 2).[br]
+    [b]INFLUXDB_HOSTNAME[/b]: IP or hostname of your InfluxDB server.[br]
+    [b]INFLUXDB_ORGANISATION[/b]: Organisation name in InfluxDB (v2+).[br]
+    [b]INFLUXDB_BUCKET[/b]: Bucket name for writing data.[br]
+    [b]INFLUXDB_TOKEN[/b]: Auth token for InfluxDB (v2+).[br]
+    [b]INFLUXDB_PORT[/b]: Port the InfluxDB service is running on.[br]
+    [b]INFLUXDB_TLS_ENABLED[/b]: Enable TLS/SSL (true/false).[br]
+    [b]TZ[/b]: Timezone string, e.g. Europe/Berlin.[br]
+    [br]
+    [b]Important:[/b] Make sure the container has access to the Fritz!Box on your LAN. If needed, adjust network mode or firewall rules accordingly.
+  </Overview>
+  <Category>Network:Monitoring:</Category>
+  <WebUI></WebUI>
+  <TemplateURL>https://raw.githubusercontent.com/Gill-Bates/unraid-app-templates/main/community-apps/01_fritzboxinflux.xml</TemplateURL>
+  <Icon>https://raw.githubusercontent.com/Gill-Bates/unraid-app-templates/main/icons/01_fritzboxinflux.png</Icon>
+  <ExtraParams>--restart unless-stopped</ExtraParams>
+  <PostArgs/>
+  <CPUset/>
+  <Date>2025-06-24</Date>
+  <Changes>Initial Unraid template version for fritzinfluxdb.</Changes>
+  <Description>
+    This container retrieves call and connection data from a Fritz!Box router and pushes it to an InfluxDB database. The data can then be visualized using tools like Grafana. Ideal for home network monitoring and statistics collection.
+    
+    [br][br][b][u][span style='color: #E80000;']Configuration[/span][/u][/b][br]
+
+    [b]FRITZBOX_USERNAME[/b]: Your Fritz!Box login username.[br]
+    [b]FRITZBOX_PASSWORD[/b]: Your Fritz!Box login password.[br]
+    [b]INFLUXDB_VERSION[/b]: InfluxDB version (1 or 2).[br]
+    [b]INFLUXDB_HOSTNAME[/b]: IP or hostname of your InfluxDB server.[br]
+    [b]INFLUXDB_ORGANISATION[/b]: Organisation name in InfluxDB (v2+).[br]
+    [b]INFLUXDB_BUCKET[/b]: Bucket name for writing data.[br]
+    [b]INFLUXDB_TOKEN[/b]: Auth token for InfluxDB (v2+).[br]
+    [b]INFLUXDB_PORT[/b]: Port the InfluxDB service is running on.[br]
+    [b]INFLUXDB_TLS_ENABLED[/b]: Enable TLS/SSL (true/false).[br]
+    [b]TZ[/b]: Timezone string, e.g. Europe/Berlin.[br]
+  </Description>
+  <Networking>
+    <Mode>bridge</Mode>
+  </Networking>
+  <Data>
+    <Volume>
+      <HostDir></HostDir>
+      <ContainerDir>/app/data</ContainerDir>
+      <Mode>rw</Mode>
+    </Volume>
+  </Data>
+  <Environment>
+    <Variable>
+      <Name>FRITZBOX_USERNAME</Name>
+      <Value></Value>
+      <Mode/>
+    </Variable>
+    <Variable>
+      <Name>FRITZBOX_PASSWORD</Name>
+      <Value></Value>
+      <Mode/>
+    </Variable>
+    <Variable>
+      <Name>INFLUXDB_VERSION</Name>
+      <Value>2</Value>
+      <Mode/>
+    </Variable>
+    <Variable>
+      <Name>INFLUXDB_HOSTNAME</Name>
+      <Value></Value>
+      <Mode/>
+    </Variable>
+    <Variable>
+      <Name>INFLUXDB_ORGANISATION</Name>
+      <Value></Value>
+      <Mode/>
+    </Variable>
+    <Variable>
+      <Name>INFLUXDB_BUCKET</Name>
+      <Value></Value>
+      <Mode/>
+    </Variable>
+    <Variable>
+      <Name>INFLUXDB_TOKEN</Name>
+      <Value></Value>
+      <Mode/>
+    </Variable>
+    <Variable>
+      <Name>INFLUXDB_PORT</Name>
+      <Value></Value>
+      <Mode/>
+    </Variable>
+    <Variable>
+      <Name>INFLUXDB_TLS_ENABLED</Name>
+      <Value>true</Value>
+      <Mode/>
+    </Variable>
+    <Variable>
+      <Name>TZ</Name>
+      <Value>Europe/Berlin</Value>
+      <Mode/>
+    </Variable>
+  </Environment>
+  <!-- Configurations -->
   <Config Name="FRITZBOX_USERNAME" Target="FRITZBOX_USERNAME" Default="" Mode="" Description="Username for Fritz!Box login" Type="Variable" Display="always" Required="true" Mask="false" />
   <Config Name="FRITZBOX_PASSWORD" Target="FRITZBOX_PASSWORD" Default="" Mode="" Description="Password for Fritz!Box login" Type="Variable" Display="always" Required="true" Mask="true" />
   <Config Name="INFLUXDB_VERSION" Target="INFLUXDB_VERSION" Default="2" Mode="" Description="Target InfluxDB version (1 or 2)" Type="Variable" Display="always" Required="true" Mask="false" />
