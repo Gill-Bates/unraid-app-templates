@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Container version="2">
+  <Name>fritzinfluxdb</Name>
+  <Repository>bbricardo/fritzinfluxdb:latest</Repository>
+  <Registry>https://hub.docker.com/r/bbricardo/fritzinfluxdb</Registry>
+  <Network>.</Network>
+  <MyIP>10..0.4</MyIP>
+  <Shell>sh</Shell>
+  <Privileged>false</Privileged>
+  <Support></Support>
+  <Project></Project>
+  <Overview>This container retrieves call and connection data from a Fritz!Box router and pushes it to an InfluxDB database. The data can then be visualized using tools like Grafana. Ideal for home network monitoring and statistics collection.</Overview>
+  <Category>Network:Monitoring</Category>
+  <WebUI></WebUI>
+  <TemplateURL></TemplateURL>
+  <Icon></Icon>
+  <ExtraParams></ExtraParams>
+  <PostArgs></PostArgs>
+  <CPUset></CPUset>
+  <DonateText></DonateText>
+  <DonateLink></DonateLink>
+  <Requires></Requires>
+
+  <Config Name="FRITZBOX_USERNAME" Target="FRITZBOX_USERNAME" Default="" Mode="" Description="Username for Fritz!Box login" Type="Variable" Display="always" Required="true" Mask="false" />
+  <Config Name="FRITZBOX_PASSWORD" Target="FRITZBOX_PASSWORD" Default="" Mode="" Description="Password for Fritz!Box login" Type="Variable" Display="always" Required="true" Mask="true" />
+  <Config Name="INFLUXDB_VERSION" Target="INFLUXDB_VERSION" Default="2" Mode="" Description="Target InfluxDB version (1 or 2)" Type="Variable" Display="always" Required="true" Mask="false" />
+  <Config Name="INFLUXDB_HOSTNAME" Target="INFLUXDB_HOSTNAME" Default="" Mode="" Description="Hostname or IP address of the InfluxDB instance" Type="Variable" Display="always" Required="true" Mask="false" />
+  <Config Name="INFLUXDB_ORGANISATION" Target="INFLUXDB_ORGANISATION" Default="" Mode="" Description="InfluxDB organization name" Type="Variable" Display="always" Required="true" Mask="false" />
+  <Config Name="INFLUXDB_BUCKET" Target="INFLUXDB_BUCKET" Default="" Mode="" Description="InfluxDB bucket name to write data to" Type="Variable" Display="always" Required="true" Mask="false" />
+  <Config Name="INFLUXDB_TOKEN" Target="INFLUXDB_TOKEN" Default="" Mode="" Description="InfluxDB access token" Type="Variable" Display="always" Required="true" Mask="true" />
+  <Config Name="INFLUXDB_PORT" Target="INFLUXDB_PORT" Default="" Mode="" Description="Port number used by InfluxDB" Type="Variable" Display="always" Required="true" Mask="false" />
+  <Config Name="INFLUXDB_TLS_ENABLED" Target="INFLUXDB_TLS_ENABLED" Default="true" Mode="" Description="Use TLS/SSL when connecting to InfluxDB (true/false)" Type="Variable" Display="always" Required="true" Mask="false" />
+  <Config Name="TZ" Target="TZ" Default="Europe/Berlin" Mode="" Description="Timezone (e.g. Europe/Berlin)" Type="Variable" Display="always" Required="true" Mask="false" />
+  <Config Name="AppData Config" Target="/app/data" Default="/mnt/user/docker/container/fritzbox" Mode="rw" Description="Path for persistent container data" Type="Path" Display="always" Required="true" Mask="false" />
+</Container>
