@@ -10,24 +10,19 @@
   <Support>https://forums.unraid.net/forum/47-docker-containers/</Support>
   <Project></Project>
   <Overview>
-    This container retrieves call and connection data from a Fritz!Box router and pushes it to an InfluxDB database. The data can then be visualized using tools like Grafana. Ideal for home network monitoring and statistics collection.
-    
-    [br][br][b][u][span style='color: #E80000;']Configuration[/span][/u][/b][br]
+    <![CDATA[
+    <p>This container retrieves call and connection data from a Fritz!Box router and pushes it to an InfluxDB database. The data can then be visualized using tools like Grafana. Ideal for home network monitoring and statistics collection.</p>
+    <p>Pre-configured Grafana Dashboards can be found here: <a href="https://github.com/bb-Ricardo/fritzinfluxdb/tree/main/grafana">https://github.com/bb-Ricardo/fritzinfluxdb/tree/main/grafana</a></p>
+    <p><strong>Important: Make sure the container has access to the Fritz!Box on your LAN. If needed, adjust network mode or firewall rules accordingly.</strong></p>
 
-    [b]FRITZBOX_USERNAME[/b]: Your Fritz!Box login username.[br]
-    [b]FRITZBOX_PASSWORD[/b]: Your Fritz!Box login password.[br]
-    [b]INFLUXDB_VERSION[/b]: InfluxDB version (1 or 2).[br]
-    [b]INFLUXDB_HOSTNAME[/b]: IP or hostname of your InfluxDB server.[br]
-    [b]INFLUXDB_ORGANISATION[/b]: Organisation name in InfluxDB (v2+).[br]
-    [b]INFLUXDB_BUCKET[/b]: Bucket name for writing data.[br]
-    [b]INFLUXDB_TOKEN[/b]: Auth token for InfluxDB (v2+).[br]
-    [b]INFLUXDB_PORT[/b]: Port the InfluxDB service is running on.[br]
-    [b]INFLUXDB_TLS_ENABLED[/b]: Enable TLS/SSL (true/false).[br]
-    [b]TZ[/b]: Timezone string, e.g. Europe/Berlin.[br]
-    [br]
-    [b]Important:[/b] Make sure the container has access to the Fritz!Box on your LAN. If needed, adjust network mode or firewall rules accordingly.
+    <p>
+    Source: <a href="https://github.com/bb-Ricardo/fritzinfluxdb" target="_new">https://github.com/bb-Ricardo/fritzinfluxdb</a>
+    <br>
+    Docker: <a href="https://hub.docker.com/r/bbricardo/fritzinfluxdb" target="_new">https://hub.docker.com/r/bbricardo/fritzinfluxdb</a>
+    </p>
+    ]]>
   </Overview>
-  <Category>Network:Monitoring:</Category>
+  <Category>Network:Other, Tools:Utilities</Category>
   <WebUI></WebUI>
   <TemplateURL>https://raw.githubusercontent.com/Gill-Bates/unraid-app-templates/main/community-apps/01_fritzboxinflux.xml</TemplateURL>
   <Icon>https://raw.githubusercontent.com/Gill-Bates/unraid-app-templates/main/icons/01_fritzboxinflux.png</Icon>
@@ -36,22 +31,6 @@
   <CPUset/>
   <Date>2025-06-24</Date>
   <Changes>Initial Unraid template version for fritzinfluxdb.</Changes>
-  <Description>
-    This container retrieves call and connection data from a Fritz!Box router and pushes it to an InfluxDB database. The data can then be visualized using tools like Grafana. Ideal for home network monitoring and statistics collection.
-    
-    [br][br][b][u][span style='color: #E80000;']Configuration[/span][/u][/b][br]
-
-    [b]FRITZBOX_USERNAME[/b]: Your Fritz!Box login username.[br]
-    [b]FRITZBOX_PASSWORD[/b]: Your Fritz!Box login password.[br]
-    [b]INFLUXDB_VERSION[/b]: InfluxDB version (1 or 2).[br]
-    [b]INFLUXDB_HOSTNAME[/b]: IP or hostname of your InfluxDB server.[br]
-    [b]INFLUXDB_ORGANISATION[/b]: Organisation name in InfluxDB (v2+).[br]
-    [b]INFLUXDB_BUCKET[/b]: Bucket name for writing data.[br]
-    [b]INFLUXDB_TOKEN[/b]: Auth token for InfluxDB (v2+).[br]
-    [b]INFLUXDB_PORT[/b]: Port the InfluxDB service is running on.[br]
-    [b]INFLUXDB_TLS_ENABLED[/b]: Enable TLS/SSL (true/false).[br]
-    [b]TZ[/b]: Timezone string, e.g. Europe/Berlin.[br]
-  </Description>
   <Networking>
     <Mode>bridge</Mode>
   </Networking>
