@@ -9,100 +9,95 @@
   <Privileged>false</Privileged>
   <Support>https://forums.unraid.net/forum/47-docker-containers/</Support>
   <Project></Project>
-  <Overview>
-    <![CDATA[
-    <p>This container retrieves call and connection data from a Fritz!Box router and pushes it to an InfluxDB database. The data can then be visualized using tools like Grafana. Ideal for home network monitoring and statistics collection.</p>
-    <p>Pre-configured Grafana Dashboards can be found here: <a href="https://github.com/bb-Ricardo/fritzinfluxdb/tree/main/grafana">https://github.com/bb-Ricardo/fritzinfluxdb/tree/main/grafana</a></p>
-    <p><strong>Important: Make sure the container has access to the Fritz!Box on your LAN. If needed, adjust network mode or firewall rules accordingly.</strong></p>
-
-    <p>
-    Source: <a href="https://github.com/bb-Ricardo/fritzinfluxdb" target="_new">https://github.com/bb-Ricardo/fritzinfluxdb</a>
+  <Overview>This container retrieves call and connection data from a Fritz!Box router and pushes it to an InfluxDB database. The data can then be visualized using tools like Grafana. Pre-configured Grafana Dashboards: https://github.com/bb-Ricardo/fritzinfluxdb/tree/main/grafana
     <br>
-    Docker: <a href="https://hub.docker.com/r/bbricardo/fritzinfluxdb" target="_new">https://hub.docker.com/r/bbricardo/fritzinfluxdb</a>
-    </p>
-    ]]>
-  </Overview>
-  <Category>Network:Other, Tools:Utilities</Category>
-  <WebUI></WebUI>
-  <TemplateURL>https://raw.githubusercontent.com/Gill-Bates/unraid-app-templates/main/community-apps/01_fritzboxinflux.xml</TemplateURL>
-  <Icon>https://raw.githubusercontent.com/Gill-Bates/unraid-app-templates/main/icons/01_fritzboxinflux.png</Icon>
-  <ExtraParams>--restart unless-stopped</ExtraParams>
-  <PostArgs/>
-  <CPUset/>
-  <Date>2025-06-24</Date>
-  <Changes>Initial Unraid template version for fritzinfluxdb.</Changes>
-  <Networking>
-    <Mode>bridge</Mode>
-  </Networking>
-  <Data>
-    <Volume>
-      <HostDir></HostDir>
-      <ContainerDir>/app/data</ContainerDir>
-      <Mode>rw</Mode>
-    </Volume>
-  </Data>
-  <Environment>
-    <Variable>
-      <Name>FRITZBOX_USERNAME</Name>
-      <Value></Value>
-      <Mode/>
-    </Variable>
-    <Variable>
-      <Name>FRITZBOX_PASSWORD</Name>
-      <Value></Value>
-      <Mode/>
-    </Variable>
-    <Variable>
-      <Name>INFLUXDB_VERSION</Name>
-      <Value>2</Value>
-      <Mode/>
-    </Variable>
-    <Variable>
-      <Name>INFLUXDB_HOSTNAME</Name>
-      <Value></Value>
-      <Mode/>
-    </Variable>
-    <Variable>
-      <Name>INFLUXDB_ORGANISATION</Name>
-      <Value></Value>
-      <Mode/>
-    </Variable>
-    <Variable>
-      <Name>INFLUXDB_BUCKET</Name>
-      <Value></Value>
-      <Mode/>
-    </Variable>
-    <Variable>
-      <Name>INFLUXDB_TOKEN</Name>
-      <Value></Value>
-      <Mode/>
-    </Variable>
-    <Variable>
-      <Name>INFLUXDB_PORT</Name>
-      <Value></Value>
-      <Mode/>
-    </Variable>
-    <Variable>
-      <Name>INFLUXDB_TLS_ENABLED</Name>
-      <Value>true</Value>
-      <Mode/>
-    </Variable>
-    <Variable>
-      <Name>TZ</Name>
-      <Value>Europe/Berlin</Value>
-      <Mode/>
-    </Variable>
-  </Environment>
-  <!-- Configurations -->
-  <Config Name="FRITZBOX_USERNAME" Target="FRITZBOX_USERNAME" Default="" Mode="" Description="Username for Fritz!Box login" Type="Variable" Display="always" Required="true" Mask="false" />
-  <Config Name="FRITZBOX_PASSWORD" Target="FRITZBOX_PASSWORD" Default="" Mode="" Description="Password for Fritz!Box login" Type="Variable" Display="always" Required="true" Mask="true" />
-  <Config Name="INFLUXDB_VERSION" Target="INFLUXDB_VERSION" Default="2" Mode="" Description="Target InfluxDB version (1 or 2)" Type="Variable" Display="always" Required="true" Mask="false" />
-  <Config Name="INFLUXDB_HOSTNAME" Target="INFLUXDB_HOSTNAME" Default="" Mode="" Description="Hostname or IP address of the InfluxDB instance" Type="Variable" Display="always" Required="true" Mask="false" />
-  <Config Name="INFLUXDB_ORGANISATION" Target="INFLUXDB_ORGANISATION" Default="" Mode="" Description="InfluxDB organization name" Type="Variable" Display="always" Required="true" Mask="false" />
-  <Config Name="INFLUXDB_BUCKET" Target="INFLUXDB_BUCKET" Default="" Mode="" Description="InfluxDB bucket name to write data to" Type="Variable" Display="always" Required="true" Mask="false" />
-  <Config Name="INFLUXDB_TOKEN" Target="INFLUXDB_TOKEN" Default="" Mode="" Description="InfluxDB access token" Type="Variable" Display="always" Required="true" Mask="true" />
-  <Config Name="INFLUXDB_PORT" Target="INFLUXDB_PORT" Default="" Mode="" Description="Port number used by InfluxDB" Type="Variable" Display="always" Required="true" Mask="false" />
-  <Config Name="INFLUXDB_TLS_ENABLED" Target="INFLUXDB_TLS_ENABLED" Default="true" Mode="" Description="Use TLS/SSL when connecting to InfluxDB (true/false)" Type="Variable" Display="always" Required="true" Mask="false" />
-  <Config Name="TZ" Target="TZ" Default="Europe/Berlin" Mode="" Description="Timezone (e.g. Europe/Berlin)" Type="Variable" Display="always" Required="true" Mask="false" />
-  <Config Name="AppData Config" Target="/app/data" Default="/mnt/user/docker/container/fritzbox" Mode="rw" Description="Path for persistent container data" Type="Path" Display="always" Required="true" Mask="false" />
-</Container>
+Important: Make sure the container has access to the Fritz!Box on your LAN.
+      <br>
+Source: https://github.com/bb-Ricardo/fritzinfluxdb
+        <br>
+Docker: https://hub.docker.com/r/bbricardo/fritzinfluxdb
+        </Overview>
+        <Category>Network:Other, Tools:Utilities</Category>
+        <WebUI></WebUI>
+        <TemplateURL>https://raw.githubusercontent.com/Gill-Bates/unraid-app-templates/main/community-apps/01_fritzboxinflux.xml</TemplateURL>
+        <Icon>https://raw.githubusercontent.com/Gill-Bates/unraid-app-templates/main/icons/01_fritzboxinflux.png</Icon>
+        <ExtraParams>--restart unless-stopped</ExtraParams>
+        <PostArgs/>
+        <CPUset/>
+        <Date>2025-06-24</Date>
+        <Changes>Initial Unraid template version for fritzinfluxdb.</Changes>
+        <Networking>
+          <Mode>bridge</Mode>
+        </Networking>
+        <Data>
+          <Volume>
+            <HostDir></HostDir>
+            <ContainerDir>/app/data</ContainerDir>
+            <Mode>rw</Mode>
+          </Volume>
+        </Data>
+        <Environment>
+          <Variable>
+            <Name>FRITZBOX_USERNAME</Name>
+            <Value></Value>
+            <Mode/>
+          </Variable>
+          <Variable>
+            <Name>FRITZBOX_PASSWORD</Name>
+            <Value></Value>
+            <Mode/>
+          </Variable>
+          <Variable>
+            <Name>INFLUXDB_VERSION</Name>
+            <Value>2</Value>
+            <Mode/>
+          </Variable>
+          <Variable>
+            <Name>INFLUXDB_HOSTNAME</Name>
+            <Value></Value>
+            <Mode/>
+          </Variable>
+          <Variable>
+            <Name>INFLUXDB_ORGANISATION</Name>
+            <Value></Value>
+            <Mode/>
+          </Variable>
+          <Variable>
+            <Name>INFLUXDB_BUCKET</Name>
+            <Value></Value>
+            <Mode/>
+          </Variable>
+          <Variable>
+            <Name>INFLUXDB_TOKEN</Name>
+            <Value></Value>
+            <Mode/>
+          </Variable>
+          <Variable>
+            <Name>INFLUXDB_PORT</Name>
+            <Value></Value>
+            <Mode/>
+          </Variable>
+          <Variable>
+            <Name>INFLUXDB_TLS_ENABLED</Name>
+            <Value>true</Value>
+            <Mode/>
+          </Variable>
+          <Variable>
+            <Name>TZ</Name>
+            <Value>Europe/Berlin</Value>
+            <Mode/>
+          </Variable>
+        </Environment>
+        <!-- Configurations -->
+        <Config Name="FRITZBOX_USERNAME" Target="FRITZBOX_USERNAME" Default="" Mode="" Description="Username for Fritz!Box login" Type="Variable" Display="always" Required="true" Mask="false" />
+        <Config Name="FRITZBOX_PASSWORD" Target="FRITZBOX_PASSWORD" Default="" Mode="" Description="Password for Fritz!Box login" Type="Variable" Display="always" Required="true" Mask="true" />
+        <Config Name="INFLUXDB_VERSION" Target="INFLUXDB_VERSION" Default="2" Mode="" Description="Target InfluxDB version (1 or 2)" Type="Variable" Display="always" Required="true" Mask="false" />
+        <Config Name="INFLUXDB_HOSTNAME" Target="INFLUXDB_HOSTNAME" Default="" Mode="" Description="Hostname or IP address of the InfluxDB instance" Type="Variable" Display="always" Required="true" Mask="false" />
+        <Config Name="INFLUXDB_ORGANISATION" Target="INFLUXDB_ORGANISATION" Default="" Mode="" Description="InfluxDB organization name" Type="Variable" Display="always" Required="true" Mask="false" />
+        <Config Name="INFLUXDB_BUCKET" Target="INFLUXDB_BUCKET" Default="" Mode="" Description="InfluxDB bucket name to write data to" Type="Variable" Display="always" Required="true" Mask="false" />
+        <Config Name="INFLUXDB_TOKEN" Target="INFLUXDB_TOKEN" Default="" Mode="" Description="InfluxDB access token" Type="Variable" Display="always" Required="true" Mask="true" />
+        <Config Name="INFLUXDB_PORT" Target="INFLUXDB_PORT" Default="" Mode="" Description="Port number used by InfluxDB" Type="Variable" Display="always" Required="true" Mask="false" />
+        <Config Name="INFLUXDB_TLS_ENABLED" Target="INFLUXDB_TLS_ENABLED" Default="true" Mode="" Description="Use TLS/SSL when connecting to InfluxDB (true/false)" Type="Variable" Display="always" Required="true" Mask="false" />
+        <Config Name="TZ" Target="TZ" Default="Europe/Berlin" Mode="" Description="Timezone (e.g. Europe/Berlin)" Type="Variable" Display="always" Required="true" Mask="false" />
+        <Config Name="AppData Config" Target="/app/data" Default="/mnt/user/docker/container/fritzbox" Mode="rw" Description="Path for persistent container data" Type="Path" Display="always" Required="true" Mask="false" />
+      </Container>
