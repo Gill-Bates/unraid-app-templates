@@ -10,11 +10,11 @@
   <Support>https://forums.unraid.net/forum/47-docker-containers/</Support>
   <Project></Project>
   <Overview>This container retrieves call and connection data from a Fritz!Box router and pushes it to an InfluxDB database. The data can then be visualized using tools like Grafana. Pre-configured Grafana Dashboards: https://github.com/bb-Ricardo/fritzinfluxdb/tree/main/grafana
-    <br>
+
 Important: Make sure the container has access to the Fritz!Box on your LAN.
-      <br>
+
 Source: https://github.com/bb-Ricardo/fritzinfluxdb
-        <br>
+
 Docker: https://hub.docker.com/r/bbricardo/fritzinfluxdb
         </Overview>
         <Category>Network:Other, Tools:Utilities</Category>
