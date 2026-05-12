@@ -42,6 +42,9 @@ For detailed reference, see the [Unraid Template Documentation](https://wiki.unr
 3. Place corresponding icons in `/icons/`.  
 4. Open a pull request with a short and clear description.
 
+**Have a feature request or want to suggest an app?**  
+Submit your ideas via this [Asana Form](https://form.asana.com/?k=qtIUrf5ydiXvXzPI57BiJw&d=714739274360802).
+
 ---
 
 ## 📜 License

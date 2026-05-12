@@ -1,0 +1,163 @@
+<?xml version="1.0"?>
+<Container version="2">
+  <Name>UniFi OS Server</Name>
+  <Repository>giiibates/unifi-os-server:latest</Repository>
+  <Registry>https://hub.docker.com/r/giiibates/unifi-os-server</Registry>
+  <Network>bridge</Network>
+  <MyIP/>
+  <Shell>sh</Shell>
+  <Privileged>false</Privileged>
+  <Support>https://forums.unraid.net/forum/47-docker-containers/</Support>
+  <Project>https://github.com/giiibates/unifi-os-server</Project>
+  <Overview>UniFi OS Server - A complete UniFi network management platform running in Docker.
+
+This container includes the UniFi Network Application, identity hub, and all supporting services. It uses systemd for proper service management and requires cgroup v2 support.
+
+Requirements:
+- Docker with cgroup v2 support
+- At least 2GB RAM
+- Persistent storage for data
+
+Features:
+- UniFi OS Server GUI/API (port 11443)
+- UniFi Network Application (port 8443)
+- Device and application communication (port 8080)
+- Mobile speed test (port 6789)
+- Hotspot portal with SSL support (port 8444)
+
+Source: https://github.com/giiibates/unifi-os-server
+  </Overview>
+  <Category>Network:Other, Tools:Utilities</Category>
+  <WebUI>https://[IP]:[PORT:11443]</WebUI>
+  <TemplateURL>https://raw.githubusercontent.com/Gill-Bates/unraid-app-templates/main/community-apps/03_unifi_os_server.xml</TemplateURL>
+  <Icon>https://raw.githubusercontent.com/Gill-Bates/unraid-app-templates/main/icons/03_unifi_os_server.png</Icon>
+  <ExtraParams>--restart unless-stopped --cap-add=NET_RAW --cap-add=NET_ADMIN --cgroupns=host -e UOS_SYSTEM_IP=unifi.example.com</ExtraParams>
+  <PostArgs/>
+  <CPUset/>
+  <Date>2026-05-12</Date>
+  <Changes>Initial Unraid template version for UniFi OS Server with systemd support.</Changes>
+  <Networking>
+    <Mode>bridge</Mode>
+    <Publish>
+      <Port>
+        <HostPort></HostPort>
+        <ContainerPort>11443</ContainerPort>
+        <Protocol>tcp</Protocol>
+      </Port>
+      <Port>
+        <HostPort></HostPort>
+        <ContainerPort>8080</ContainerPort>
+        <Protocol>tcp</Protocol>
+      </Port>
+      <Port>
+        <HostPort></HostPort>
+        <ContainerPort>8443</ContainerPort>
+        <Protocol>tcp</Protocol>
+      </Port>
+      <Port>
+        <HostPort></HostPort>
+        <ContainerPort>8444</ContainerPort>
+        <Protocol>tcp</Protocol>
+      </Port>
+      <Port>
+        <HostPort></HostPort>
+        <ContainerPort>3478</ContainerPort>
+        <Protocol>udp</Protocol>
+      </Port>
+      <Port>
+        <HostPort></HostPort>
+        <ContainerPort>10003</ContainerPort>
+        <Protocol>udp</Protocol>
+      </Port>
+      <Port>
+        <HostPort></HostPort>
+        <ContainerPort>5005</ContainerPort>
+        <Protocol>tcp</Protocol>
+      </Port>
+      <Port>
+        <HostPort></HostPort>
+        <ContainerPort>6789</ContainerPort>
+        <Protocol>tcp</Protocol>
+      </Port>
+      <Port>
+        <HostPort></HostPort>
+        <ContainerPort>9543</ContainerPort>
+        <Protocol>tcp</Protocol>
+      </Port>
+    </Publish>
+  </Networking>
+  <Data>
+    <Volume>
+      <HostDir></HostDir>
+      <ContainerDir>/persistent</ContainerDir>
+      <Mode>rw</Mode>
+    </Volume>
+    <Volume>
+      <HostDir></HostDir>
+      <ContainerDir>/var/log</ContainerDir>
+      <Mode>rw</Mode>
+    </Volume>
+    <Volume>
+      <HostDir></HostDir>
+      <ContainerDir>/data</ContainerDir>
+      <Mode>rw</Mode>
+    </Volume>
+    <Volume>
+      <HostDir></HostDir>
+      <ContainerDir>/srv</ContainerDir>
+      <Mode>rw</Mode>
+    </Volume>
+    <Volume>
+      <HostDir></HostDir>
+      <ContainerDir>/var/lib/unifi</ContainerDir>
+      <Mode>rw</Mode>
+    </Volume>
+    <Volume>
+      <HostDir></HostDir>
+      <ContainerDir>/var/lib/mongodb</ContainerDir>
+      <Mode>rw</Mode>
+    </Volume>
+    <Volume>
+      <HostDir></HostDir>
+      <ContainerDir>/etc/rabbitmq/ssl</ContainerDir>
+      <Mode>rw</Mode>
+    </Volume>
+  </Data>
+  <Environment>
+    <Variable>
+      <Name>UOS_SYSTEM_IP</Name>
+      <Value>unifi.example.com</Value>
+      <Mode/>
+    </Variable>
+    <Variable>
+      <Name>HARDWARE_PLATFORM</Name>
+      <Value></Value>
+      <Mode/>
+    </Variable>
+    <Variable>
+      <Name>TZ</Name>
+      <Value>UTC</Value>
+      <Mode/>
+    </Variable>
+  </Environment>
+  <!-- Configurations -->
+  <Config Name="UOS System IP/Hostname" Target="UOS_SYSTEM_IP" Default="unifi.example.com" Mode="" Description="Hostname or IP for device adoption and remote management (REQUIRED)" Type="Variable" Display="always" Required="true" Mask="false" />
+  <Config Name="Hardware Platform" Target="HARDWARE_PLATFORM" Default="" Mode="" Description="Optional: Set to 'synology' if running on Synology NAS" Type="Variable" Display="always" Required="false" Mask="false" />
+  <Config Name="Timezone" Target="TZ" Default="UTC" Mode="" Description="Container timezone (e.g. UTC, Europe/Berlin)" Type="Variable" Display="always" Required="false" Mask="false" />
+  <Config Name="UniFi OS Server GUI" Target="11443" Default="" Mode="tcp" Description="UniFi OS Server GUI/API Port" Type="Port" Display="always" Required="true" Mask="false" />
+  <Config Name="Device Communication" Target="8080" Default="" Mode="tcp" Description="Device and application communication port (REQUIRED)" Type="Port" Display="always" Required="true" Mask="false" />
+  <Config Name="UniFi Network App" Target="8443" Default="" Mode="tcp" Description="UniFi Network Application GUI/API (Optional)" Type="Port" Display="always" Required="false" Mask="false" />
+  <Config Name="Hotspot Portal" Target="8444" Default="" Mode="tcp" Description="Secure Portal for Hotspot (Optional)" Type="Port" Display="always" Required="false" Mask="false" />
+  <Config Name="STUN" Target="3478" Default="" Mode="udp" Description="STUN for device adoption (REQUIRED)" Type="Port" Display="always" Required="true" Mask="false" />
+  <Config Name="Device Discovery" Target="10003" Default="" Mode="udp" Description="Device discovery during adoption (REQUIRED)" Type="Port" Display="always" Required="true" Mask="false" />
+  <Config Name="RTP" Target="5005" Default="" Mode="tcp" Description="Real-time Transport Protocol (Optional)" Type="Port" Display="always" Required="false" Mask="false" />
+  <Config Name="Mobile Speed Test" Target="6789" Default="" Mode="tcp" Description="UniFi mobile speed test (Optional)" Type="Port" Display="always" Required="false" Mask="false" />
+  <Config Name="Identity Hub" Target="9543" Default="" Mode="tcp" Description="UniFi Identity Hub (Optional)" Type="Port" Display="always" Required="false" Mask="false" />
+  <Config Name="Persistent Data" Target="/persistent" Default="/mnt/user/docker/unifi-os/persistent" Mode="rw" Description="Path for persistent container data" Type="Path" Display="always" Required="true" Mask="false" />
+  <Config Name="Logs" Target="/var/log" Default="/mnt/user/docker/unifi-os/logs" Mode="rw" Description="Path for container logs" Type="Path" Display="always" Required="true" Mask="false" />
+  <Config Name="UniFi Data" Target="/data" Default="/mnt/user/docker/unifi-os/data" Mode="rw" Description="Path for UniFi application data" Type="Path" Display="always" Required="true" Mask="false" />
+  <Config Name="srv Directory" Target="/srv" Default="/mnt/user/docker/unifi-os/srv" Mode="rw" Description="Path for srv directory" Type="Path" Display="always" Required="true" Mask="false" />
+  <Config Name="UniFi Library" Target="/var/lib/unifi" Default="/mnt/user/docker/unifi-os/lib-unifi" Mode="rw" Description="Path for UniFi library data" Type="Path" Display="always" Required="true" Mask="false" />
+  <Config Name="MongoDB Library" Target="/var/lib/mongodb" Default="/mnt/user/docker/unifi-os/lib-mongodb" Mode="rw" Description="Path for MongoDB data" Type="Path" Display="always" Required="true" Mask="false" />
+  <Config Name="RabbitMQ SSL" Target="/etc/rabbitmq/ssl" Default="/mnt/user/docker/unifi-os/rabbitmq-ssl" Mode="rw" Description="Path for RabbitMQ SSL certificates" Type="Path" Display="always" Required="true" Mask="false" />
+</Container>
