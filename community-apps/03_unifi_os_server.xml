@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <Container version="2">
-  <Name>UniFi OS Server</Name>
+  <Name>unifi-os-server</Name>
   <Repository>giiibates/unifi-os-server:latest</Repository>
   <Registry>https://hub.docker.com/r/giiibates/unifi-os-server</Registry>
   <Network>bridge</Network>
@@ -31,7 +31,7 @@ Source: https://github.com/giiibates/unifi-os-server
   <WebUI>https://[IP]:[PORT:11443]</WebUI>
   <TemplateURL>https://raw.githubusercontent.com/Gill-Bates/unraid-app-templates/main/community-apps/03_unifi_os_server.xml</TemplateURL>
   <Icon>https://raw.githubusercontent.com/Gill-Bates/unraid-app-templates/main/icons/03_unifi_os_server.png</Icon>
-  <ExtraParams>--restart unless-stopped --cap-add=NET_RAW --cap-add=NET_ADMIN --cgroupns=host -e UOS_SYSTEM_IP=unifi.example.com</ExtraParams>
+  <ExtraParams>--restart unless-stopped --cgroupns=host -e UOS_SYSTEM_IP=unifi.local</ExtraParams>
   <PostArgs/>
   <CPUset/>
   <Date>2026-05-12</Date>
@@ -141,11 +141,11 @@ Source: https://github.com/giiibates/unifi-os-server
     </Variable>
   </Environment>
   <!-- Configurations -->
-  <Config Name="UOS System IP/Hostname" Target="UOS_SYSTEM_IP" Default="unifi.example.com" Mode="" Description="Hostname or IP for device adoption and remote management (REQUIRED)" Type="Variable" Display="always" Required="true" Mask="false" />
+  <Config Name="UOS System IP/Hostname" Target="UOS_SYSTEM_IP" Default="unifi.local" Mode="" Description="Hostname or IP for device adoption and remote management (REQUIRED)" Type="Variable" Display="always" Required="true" Mask="false" />
   <Config Name="Hardware Platform" Target="HARDWARE_PLATFORM" Default="" Mode="" Description="Optional: Set to 'synology' if running on Synology NAS" Type="Variable" Display="always" Required="false" Mask="false" />
   <Config Name="Timezone" Target="TZ" Default="UTC" Mode="" Description="Container timezone (e.g. UTC, Europe/Berlin)" Type="Variable" Display="always" Required="false" Mask="false" />
-  <Config Name="UniFi OS Server GUI" Target="11443" Default="" Mode="tcp" Description="UniFi OS Server GUI/API Port" Type="Port" Display="always" Required="true" Mask="false" />
-  <Config Name="Device Communication" Target="8080" Default="" Mode="tcp" Description="Device and application communication port (REQUIRED)" Type="Port" Display="always" Required="true" Mask="false" />
+  <Config Name="UniFi OS Server GUI" Target="11443" Default="" Mode="tcp" Description="UniFi OS Server GUI/API Port (Optional)" Type="Port" Display="always" Required="false" Mask="false" />
+  <Config Name="Device Communication" Target="8080" Default="" Mode="tcp" Description="Device and application communication port (Optional)" Type="Port" Display="always" Required="false" Mask="false" />
   <Config Name="UniFi Network App" Target="8443" Default="" Mode="tcp" Description="UniFi Network Application GUI/API (Optional)" Type="Port" Display="always" Required="false" Mask="false" />
   <Config Name="Hotspot Portal" Target="8444" Default="" Mode="tcp" Description="Secure Portal for Hotspot (Optional)" Type="Port" Display="always" Required="false" Mask="false" />
   <Config Name="STUN" Target="3478" Default="3478" Mode="udp" Description="STUN for device adoption (Optional)" Type="Port" Display="always" Required="false" Mask="false" />
