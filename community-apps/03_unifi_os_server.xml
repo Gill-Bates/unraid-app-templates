@@ -27,7 +27,7 @@ Features:
 
 Source: https://github.com/giiibates/unifi-os-server
   </Overview>
-  <Category>Network:Network-Management</Category>
+  <Category>Network:Management</Category>
   <WebUI>https://[IP]:[PORT:11443]</WebUI>
   <TemplateURL>https://raw.githubusercontent.com/Gill-Bates/unraid-app-templates/main/community-apps/03_unifi_os_server.xml</TemplateURL>
   <Icon>https://raw.githubusercontent.com/Gill-Bates/unraid-app-templates/main/icons/03_unifi_os_server.png</Icon>
@@ -126,7 +126,7 @@ Source: https://github.com/giiibates/unifi-os-server
   <Environment>
     <Variable>
       <Name>UOS_SYSTEM_IP</Name>
-      <Value>unifi.example.com</Value>
+      <Value>unifi.local</Value>
       <Mode/>
     </Variable>
     <Variable>
