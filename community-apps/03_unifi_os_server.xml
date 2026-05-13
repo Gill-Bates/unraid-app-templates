@@ -25,7 +25,13 @@ Features:
 - Mobile speed test (port 6789)
 - Hotspot portal with SSL support (port 8444)
 
+Troubleshooting:
+docker exec -it unifi-os-server systemctl list-jobs
+docker exec -it unifi-os-server ss -tulpn
+docker exec -it unifi-os-server journalctl -u unifi-core -f
+
 Source: https://github.com/giiibates/unifi-os-server
+
   </Overview>
   <Category>Network:Management</Category>
   <WebUI>https://[IP]:[PORT:11443]</WebUI>
