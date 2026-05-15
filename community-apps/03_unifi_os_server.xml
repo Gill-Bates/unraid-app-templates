@@ -34,7 +34,7 @@ Source: https://github.com/giiibates/unifi-os-server
 
   </Overview>
   <Category>Network:Management</Category>
-  <WebUI>https://[IP]:[PORT:1443]</WebUI>
+  <WebUI>https://[IP]:[PORT:11443]</WebUI>
   <TemplateURL>https://raw.githubusercontent.com/Gill-Bates/unraid-app-templates/main/community-apps/03_unifi_os_server.xml</TemplateURL>
   <Icon>https://raw.githubusercontent.com/Gill-Bates/unraid-app-templates/main/icons/03_unifi_os_server.png</Icon>
   <ExtraParams>--restart unless-stopped --cgroupns=host -e UOS_SYSTEM_IP=unifi.local</ExtraParams>
