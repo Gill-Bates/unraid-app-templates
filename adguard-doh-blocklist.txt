@@ -1,0 +1,117 @@
+! Title: DoH/DoT Bypass Blocklist
+! Description: Blocks DNS-over-HTTPS and DNS-over-TLS servers to prevent DNS filtering bypass
+! Homepage: https://github.com/Gill-Bates/unifi-mcp-server
+! Last modified: 2026-05-28
+! License: MIT
+!
+! Note: Import this in AdGuard Home → Filters → DNS blocklists → Add blocklist
+!       Or paste rules into Filters → Custom filtering rules
+!
+! WARNING: Some domains use CDN (Cloudflare, Google) - blocking may affect other services
+!          Consider using DPI-based blocking (UniFi App Blocking) as primary method
+!
+! IMPORTANT: The following domains are WHITELISTED because AdGuard uses them as upstream:
+!   - dns10.quad9.net (Quad9 unfiltered)
+!   - dns.cloudflare.com (Cloudflare DoH)
+!   - doh.opendns.com (OpenDNS DoH)
+! If you use different upstream servers, adjust the whitelist accordingly!
+
+! === WHITELIST - AdGuard Upstream Servers (DO NOT BLOCK) ===
+@@||dns10.quad9.net^
+@@||dns.cloudflare.com^
+@@||doh.opendns.com^
+
+! === Major Public DoH/DoT Providers ===
+
+! Quad9 (dns10 whitelisted above - used as upstream)
+||dns.quad9.net^
+||dns9.quad9.net^
+! ||dns10.quad9.net^  ! WHITELISTED - AdGuard upstream
+||dns11.quad9.net^
+||dns12.quad9.net^
+
+! Cloudflare (dns.cloudflare.com whitelisted above - used as upstream)
+! ||cloudflare-dns.com^  ! WHITELISTED - AdGuard upstream (same as dns.cloudflare.com)
+||one.one.one.one^
+||1dot1dot1dot1.cloudflare-dns.com^
+
+! Google
+||dns.google^
+||dns.google.com^
+
+! AdGuard (block external, keep local AdGuard working)
+||dns.adguard.com^
+||dns.adguard-dns.com^
+||family.adguard-dns.com^
+||unfiltered.adguard-dns.com^
+
+! NextDNS
+||dns.nextdns.io^
+
+! Mullvad
+||dns.mullvad.net^
+||adblock.dns.mullvad.net^
+||base.dns.mullvad.net^
+||extended.dns.mullvad.net^
+||all.dns.mullvad.net^
+||family.dns.mullvad.net^
+
+! === Secondary Providers ===
+
+! Cisco/OpenDNS (doh.opendns.com whitelisted above - used as upstream)
+! ||doh.opendns.com^  ! WHITELISTED - AdGuard upstream
+
+! CleanBrowsing
+||doh.cleanbrowsing.org^
+
+! DNS.SB
+||dns.sb^
+||doh.dns.sb^
+
+! LibreDNS
+||doh.libredns.gr^
+
+! BlahDNS
+||doh-de.blahdns.com^
+||doh-sg.blahdns.com^
+
+! Tiar
+||doh.tiar.app^
+||doh.tiarap.org^
+
+! DNSforge
+||dnsforge.de^
+
+! FFMUC
+||doh.ffmuc.net^
+
+! RethinkDNS
+||sky.rethinkdns.com^
+||max.rethinkdns.com^
+
+! ControlD
+||freedns.controld.com^
+
+! Switch.ch
+||dns.switch.ch^
+
+! Canadian Shield
+||private.canadianshield.cira.ca^
+||protected.canadianshield.cira.ca^
+||family.canadianshield.cira.ca^
+
+! doh.crypto.sx
+||doh.crypto.sx^
+
+! Uncensored DNS
+||unicast.uncensoreddns.org^
+||anycast.uncensoreddns.org^
+
+! === Chinese Providers (GFW filtered) ===
+||dns.alidns.com^
+||doh.pub^
+||doh.360.cn^
+
+! === Russian Providers ===
+||dns.yandex.ru^
+||dns.comss.one^
