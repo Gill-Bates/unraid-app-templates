@@ -14,19 +14,19 @@
 Includes the UniFi Network Application, identity hub, credential server, and all supporting services (PostgreSQL, MongoDB, RabbitMQ, nginx).
 
 Requirements:
-- Unraid 6.12 or newer (cgroup v2 required)
-- At least 4 GB RAM (6-8 GB recommended)
-- Persistent storage configured for all listed paths
+  - Unraid 6.12 or newer (cgroup v2 required)
+  - At least 4 GB RAM (6-8 GB recommended)
+  - Persistent storage configured for all listed paths
 
 IMPORTANT - Device Adoption:
-Set UOS_SYSTEM_IP to the IP address or hostname of your Docker host.
-Without this, UniFi devices cannot be adopted.
+  Set UOS_SYSTEM_IP to the IP address or hostname of your Docker host.
+  Without this, UniFi devices cannot be adopted.
 
 First Boot:
-All services take 3-5 minutes to initialize on first start.
-Do not access the GUI until startup is complete.
-Monitor progress: Unraid Docker tab -> Container log, or:
-docker logs -f unifi-os-server
+    All services take 3-5 minutes to initialize on first start.
+    Do not access the GUI until startup is complete.
+    Monitor progress: Unraid Docker tab -> Container log, or:
+    docker logs -f unifi-os-server
 
 GUI Access:
 https://[your-unraid-ip]:11443
@@ -49,7 +49,7 @@ Source: https://github.com/giiibates/unifi-os-server
   <PostArgs/>
   <CPUset/>
   <Date>2026-06-02</Date>
-  <Changes>Fix WebUI container port (443), add PostgreSQL persistent volume, drop Privileged in favour of explicit caps, add tmpfs mounts and stop-signal, add missing ports, update Overview with Unraid version requirement and first-boot guidance.</Changes>
+  <Changes>Set Privileged=false and add /sys/fs/cgroup:rw mount (required for systemd PID 1 without privileged). Fix WebUI container port (443), add PostgreSQL persistent volume, drop Privileged in favour of explicit caps, add tmpfs mounts and stop-signal, add missing ports, update Overview with Unraid version requirement and first-boot guidance.</Changes>
   <Networking>
     <Mode>bridge</Mode>
     <Publish>
@@ -132,6 +132,11 @@ Source: https://github.com/giiibates/unifi-os-server
   </Networking>
   <Data>
     <Volume>
+      <HostDir>/sys/fs/cgroup</HostDir>
+      <ContainerDir>/sys/fs/cgroup</ContainerDir>
+      <Mode>rw</Mode>
+    </Volume>
+    <Volume>
       <HostDir>/mnt/user/docker/unifi-os/persistent</HostDir>
       <ContainerDir>/persistent</ContainerDir>
       <Mode>rw</Mode>
@@ -202,6 +207,7 @@ Source: https://github.com/giiibates/unifi-os-server
   <Config Name="RTP" Target="5005" Default="5005" Mode="tcp" Description="Real-time Transport Protocol" Type="Port" Display="always" Required="false" Mask="false" />
   <Config Name="Mobile Speed Test" Target="6789" Default="6789" Mode="tcp" Description="UniFi mobile speed test" Type="Port" Display="always" Required="false" Mask="false" />
   <Config Name="Identity Hub" Target="9543" Default="9543" Mode="tcp" Description="UniFi Identity Hub" Type="Port" Display="always" Required="false" Mask="false" />
+  <Config Name="cgroup (systemd)" Target="/sys/fs/cgroup" Default="/sys/fs/cgroup" Mode="rw" Description="REQUIRED: read-write cgroup mount for systemd as PID 1. Without this the container does not start unless Privileged=true." Type="Path" Display="advanced" Required="true" Mask="false">/sys/fs/cgroup</Config>
   <Config Name="Persistent Data" Target="/persistent" Default="/mnt/user/docker/unifi-os/persistent" Mode="rw" Description="Path for persistent container data" Type="Path" Display="always" Required="true" Mask="false" />
   <Config Name="Logs" Target="/var/log" Default="/mnt/user/docker/unifi-os/logs" Mode="rw" Description="Path for container logs" Type="Path" Display="always" Required="true" Mask="false" />
   <Config Name="UniFi Data" Target="/data" Default="/mnt/user/docker/unifi-os/data" Mode="rw" Description="Path for UniFi application data" Type="Path" Display="always" Required="true" Mask="false" />
