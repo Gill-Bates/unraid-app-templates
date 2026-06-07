@@ -1,51 +1,67 @@
 <?xml version="1.0"?>
 <Container version="2">
   <Name>velociraptor</Name>
-  <Repository>wlambert/velociraptor:latest</Repository>
-  <Registry>https://hub.docker.com/r/wlambert/velociraptor</Registry>
+  <Repository>xboarder56/velociraptor:latest</Repository>
+  <Registry>https://hub.docker.com/r/xboarder56/velociraptor</Registry>
   <Network>bridge</Network>
-  <MyIP/>
+  <MyIP />
   <Shell>sh</Shell>
   <Privileged>false</Privileged>
-  <Support>https://github.com/weslambert/velociraptor-docker/issues</Support>
-  <Project>https://github.com/weslambert/velociraptor-docker</Project>
-  <Overview>Velociraptor DFIR server running in Docker, adapted for Unraid.
+  <Support>https://github.com/Xboarder56/velociraptor-docker/issues</Support>
+  <Project>https://github.com/Xboarder56/velociraptor-docker</Project>
+  <Overview>Velociraptor DFIR server running in Docker (xboarder56 fork), adapted for Unraid.
+    Multi-arch image: linux/amd64 and linux/arm64.
 
-This template is based on the supplied docker-compose.yml and server.config.yaml.
+    Mapped services:
+    - Frontend / client ingress: 8000/tcp
+    - API / gRPC gateway: 8001/tcp
+    - Web GUI (HTTPS): 8889/tcp
+    - Prometheus metrics: 8003/tcp
 
-Mapped services:
-  - Frontend / client ingress: 8000/tcp
-  - API / gRPC gateway: 8001/tcp
-  - Web GUI: 8889/tcp
+    Persistent path:
+    - /mnt/user/appdata/velociraptor -&gt; /velociraptor
+    (config, keys, artifacts, repacked client bundles — all stored here)
 
-Persistent paths:
-  - /mnt/user/appdata/velociraptor -> /velociraptor
-  - /mnt/user/appdata/velociraptor/logs -> /var/logs
+    First run:
+    The container auto-generates server.config.yaml and client.config.yaml and
+    repacks Linux (.deb/.rpm amd64+arm64), macOS (amd64+arm64) and Windows
+    (.exe/.msi) clients into /velociraptor/client_bundles/.
+    A small build banner (version, arch, base image, git commit, build date)
+    is printed to the log on every start.
 
-Important setup notes:
-  - Put your server.config.yaml into /mnt/user/appdata/velociraptor/server.config.yaml before first start.
-  - The supplied server.config.yaml binds Frontend, API and GUI to 0.0.0.0, which is compatible with bridge networking and Unraid port publishing.
-  - The supplied server.config.yaml uses Logging.output_directory: ./logs, so logs are persisted under /mnt/user/appdata/velociraptor/logs.
-  - The GUI uses TLS/self-signed or configured certificates. Browser certificate warnings can be expected unless a trusted certificate is configured.
-  - Keep API port 8001 restricted to trusted networks only.
+    Login:
+    Open https://[UNRAID-IP]:8889, accept the self-signed TLS certificate and
+    log in with the credentials set via VELOX_DEFAULT_USER / VELOX_DEFAULT_PASSWORD.
+    Change them immediately after first login!
 
-If you want to keep the custom Docker network from the compose file, create the network on Unraid first and then switch the container network manually from bridge to the custom network in the Unraid Docker UI.
+    Security:
+    - TLS is self-signed by default; rotate keys/certificates from the Velociraptor GUI.
+    - Keep API port 8001 and metrics port 8003 restricted to trusted networks only.
+    - VELOX_DEFAULT_USER/PASSWORD are only used for the initial bootstrap user.
 
-Troubleshooting:
-  docker logs -f velociraptor
-  docker exec -it velociraptor sh
+    Troubleshooting:
+    docker logs -f velociraptor
+    docker exec -it velociraptor sh
 
-Source: https://github.com/weslambert/velociraptor-docker
+    Source: https://github.com/Xboarder56/velociraptor-docker
+    Fork of: https://github.com/weslambert/velociraptor-docker (Wes Lambert)
   </Overview>
-  <Category>Tools:System</Category>
+  <Category>Tools:System Security:</Category>
   <WebUI>https://[IP]:[PORT:8889]</WebUI>
-  <TemplateURL>https://raw.githubusercontent.com/Gill-Bates/unraid-app-templates/main/community-apps/02_velociraptor.xml</TemplateURL>
-  <Icon>https://raw.githubusercontent.com/Gill-Bates/unraid-app-templates/main/icons/02_velociraptor.svg</Icon>
+  <TemplateURL>
+    https://raw.githubusercontent.com/Gill-Bates/unraid-app-templates/main/community-apps/02_velociraptor.xml</TemplateURL>
+  <Icon>
+    https://raw.githubusercontent.com/Gill-Bates/unraid-app-templates/main/icons/02_velociraptor.png</Icon>
   <ExtraParams>--restart unless-stopped --security-opt=no-new-privileges:true</ExtraParams>
-  <PostArgs/>
-  <CPUset/>
+  <PostArgs />
+  <CPUset />
   <Date>2026-06-07</Date>
-  <Changes>Adapt template from UniFi OS Server to Velociraptor for Unraid. Set image to wlambert/velociraptor:latest, use bridge networking with published ports 8000/tcp, 8001/tcp and 8889/tcp, add /mnt/user/appdata/velociraptor persistent mappings, add PUID/PGID/TZ environment variables and keep privileged mode disabled with no-new-privileges.</Changes>
+  <Changes>Update template to xboarder56/velociraptor fork: new image/repo URLs, add Prometheus port
+    8003, replace manual server.config.yaml requirement with runtime env-var configuration
+    (VELOX_DEFAULT_USER/PASSWORD, VELOX_FRONTEND_*, VELOX_GUI_*, VELOX_API_PORT,
+    VELOX_MONITORING_PORT, VELOX_START_SERVER_VERBOSE), remove /var/logs volume (logs now in
+    /velociraptor), update Overview for auto-generated config and multi-arch client repacks, add
+    Security category.</Changes>
   <Networking>
     <Mode>bridge</Mode>
     <Publish>
@@ -64,6 +80,11 @@ Source: https://github.com/weslambert/velociraptor-docker
         <ContainerPort>8889</ContainerPort>
         <Protocol>tcp</Protocol>
       </Port>
+      <Port>
+        <HostPort>8003</HostPort>
+        <ContainerPort>8003</ContainerPort>
+        <Protocol>tcp</Protocol>
+      </Port>
     </Publish>
   </Networking>
   <Data>
@@ -72,36 +93,142 @@ Source: https://github.com/weslambert/velociraptor-docker
       <ContainerDir>/velociraptor</ContainerDir>
       <Mode>rw</Mode>
     </Volume>
-    <Volume>
-      <HostDir>/mnt/user/appdata/velociraptor/logs</HostDir>
-      <ContainerDir>/var/logs</ContainerDir>
-      <Mode>rw</Mode>
-    </Volume>
   </Data>
   <Environment>
     <Variable>
       <Name>TZ</Name>
-      <Value>Europe/Berlin</Value>
-      <Mode/>
+      <Value>Etc/UTC</Value>
+      <Mode />
     </Variable>
     <Variable>
-      <Name>PUID</Name>
-      <Value>1000</Value>
-      <Mode/>
+      <Name>VELOX_DEFAULT_USER</Name>
+      <Value>admin</Value>
+      <Mode />
     </Variable>
     <Variable>
-      <Name>PGID</Name>
-      <Value>1000</Value>
-      <Mode/>
+      <Name>VELOX_DEFAULT_PASSWORD</Name>
+      <Value>changeme</Value>
+      <Mode />
+    </Variable>
+    <Variable>
+      <Name>VELOX_DEFAULT_USER_ROLE</Name>
+      <Value>administrator</Value>
+      <Mode />
+    </Variable>
+    <Variable>
+      <Name>VELOX_FRONTEND_HOSTNAME</Name>
+      <Value>localhost</Value>
+      <Mode />
+    </Variable>
+    <Variable>
+      <Name>VELOX_FRONTEND_PORT</Name>
+      <Value>8000</Value>
+      <Mode />
+    </Variable>
+    <Variable>
+      <Name>VELOX_FRONTEND_SERVER_SCHEME</Name>
+      <Value>https</Value>
+      <Mode />
+    </Variable>
+    <Variable>
+      <Name>VELOX_GUI_HOSTNAME</Name>
+      <Value>localhost</Value>
+      <Mode />
+    </Variable>
+    <Variable>
+      <Name>VELOX_GUI_PORT</Name>
+      <Value>8889</Value>
+      <Mode />
+    </Variable>
+    <Variable>
+      <Name>VELOX_GUI_SCHEME</Name>
+      <Value>https</Value>
+      <Mode />
+    </Variable>
+    <Variable>
+      <Name>VELOX_API_PORT</Name>
+      <Value>8001</Value>
+      <Mode />
+    </Variable>
+    <Variable>
+      <Name>VELOX_MONITORING_PORT</Name>
+      <Value>8003</Value>
+      <Mode />
+    </Variable>
+    <Variable>
+      <Name>VELOX_START_SERVER_VERBOSE</Name>
+      <Value>false</Value>
+      <Mode />
     </Variable>
   </Environment>
   <!-- Configurations -->
-  <Config Name="Timezone" Target="TZ" Default="Europe/Berlin" Mode="" Description="Container timezone, for example Europe/Berlin." Type="Variable" Display="always" Required="false" Mask="false" />
-  <Config Name="PUID" Target="PUID" Default="1000" Mode="" Description="User ID used by the container where supported by the image." Type="Variable" Display="advanced" Required="false" Mask="false" />
-  <Config Name="PGID" Target="PGID" Default="1000" Mode="" Description="Group ID used by the container where supported by the image." Type="Variable" Display="advanced" Required="false" Mask="false" />
-  <Config Name="Frontend / Client Ingress" Target="8000" Default="8000" Mode="tcp" Description="Velociraptor frontend/client ingress port from server.config.yaml Frontend.bind_port." Type="Port" Display="always" Required="true" Mask="false" />
-  <Config Name="API / gRPC Gateway" Target="8001" Default="8001" Mode="tcp" Description="Velociraptor API/gRPC gateway port from server.config.yaml API.bind_port. Restrict access to trusted networks." Type="Port" Display="advanced" Required="true" Mask="false" />
-  <Config Name="Web GUI" Target="8889" Default="8889" Mode="tcp" Description="Velociraptor Web GUI port from server.config.yaml GUI.bind_port." Type="Port" Display="always" Required="true" Mask="false" />
-  <Config Name="Velociraptor Data" Target="/velociraptor" Default="/mnt/user/appdata/velociraptor" Mode="rw" Description="Persistent Velociraptor data directory. Put server.config.yaml here before first start." Type="Path" Display="always" Required="true" Mask="false" />
-  <Config Name="Velociraptor Logs" Target="/var/logs" Default="/mnt/user/appdata/velociraptor/logs" Mode="rw" Description="Persistent log directory matching the supplied compose volume." Type="Path" Display="always" Required="true" Mask="false" />
+  <Config Name="Timezone" Target="TZ" Default="Etc/UTC" Mode=""
+    Description="Container timezone, e.g. Etc/UTC or America/New_York." Type="Variable"
+    Display="always" Required="false" Mask="false" />
+  <!-- Auth -->
+  <Config Name="Admin Username" Target="VELOX_DEFAULT_USER" Default="admin" Mode=""
+    Description="Bootstrap admin username for the Velociraptor GUI. Change after first login."
+    Type="Variable" Display="always" Required="true" Mask="false" />
+  <Config Name="Admin Password" Target="VELOX_DEFAULT_PASSWORD" Default="changeme" Mode=""
+    Description="Bootstrap admin password. Change immediately after first login!" Type="Variable"
+    Display="always" Required="true" Mask="true" />
+  <Config Name="Admin Role" Target="VELOX_DEFAULT_USER_ROLE" Default="administrator" Mode=""
+    Description="Role assigned to the bootstrap user (e.g. administrator, analyst, investigator)."
+    Type="Variable" Display="advanced" Required="false" Mask="false" />
+  <!-- Frontend / Client URL -->
+  <Config Name="Frontend Hostname" Target="VELOX_FRONTEND_HOSTNAME" Default="localhost" Mode=""
+    Description="Public hostname clients use to reach the server. Set to your Unraid IP or FQDN."
+    Type="Variable" Display="always" Required="false" Mask="false" />
+  <Config Name="Frontend Port" Target="VELOX_FRONTEND_PORT" Default="8000" Mode=""
+    Description="Public-facing port clients use to reach the server (built into client URL)."
+    Type="Variable" Display="always" Required="false" Mask="false" />
+  <Config Name="Frontend Scheme" Target="VELOX_FRONTEND_SERVER_SCHEME" Default="https" Mode=""
+    Description="Scheme for client URL: https (recommended) or http." Type="Variable"
+    Display="advanced" Required="false" Mask="false" />
+  <Config Name="Frontend Server URL (override)" Target="VELOX_FRONTEND_SERVER_URL" Default=""
+    Mode=""
+    Description="Full client URL override, e.g. https://ingest.example.com:8000/ — overrides Hostname/Port/Scheme if set."
+    Type="Variable" Display="advanced" Required="false" Mask="false" />
+  <!-- GUI URL -->
+  <Config Name="GUI Hostname" Target="VELOX_GUI_HOSTNAME" Default="localhost" Mode=""
+    Description="Public hostname for the admin GUI. Defaults to Frontend Hostname if not set."
+    Type="Variable" Display="always" Required="false" Mask="false" />
+  <Config Name="GUI Port" Target="VELOX_GUI_PORT" Default="8889" Mode=""
+    Description="Public-facing port for the admin GUI." Type="Variable" Display="always"
+    Required="false" Mask="false" />
+  <Config Name="GUI Scheme" Target="VELOX_GUI_SCHEME" Default="https" Mode=""
+    Description="Scheme for GUI URL: https or http." Type="Variable" Display="advanced"
+    Required="false" Mask="false" />
+  <Config Name="GUI URL (override)" Target="VELOX_GUI_URL" Default="" Mode=""
+    Description="Full GUI URL override, e.g. https://admin.example.com:8889/app/index.html — overrides GUI Hostname/Port/Scheme if set."
+    Type="Variable" Display="advanced" Required="false" Mask="false" />
+  <!-- Internal ports -->
+  <Config Name="API / gRPC Port (internal)" Target="VELOX_API_PORT" Default="8001" Mode=""
+    Description="Internal gRPC API port. Only change if you have a port conflict." Type="Variable"
+    Display="advanced" Required="false" Mask="false" />
+  <Config Name="Prometheus Metrics Port (internal)" Target="VELOX_MONITORING_PORT" Default="8003"
+    Mode="" Description="Internal Prometheus metrics port. Only change if you have a port conflict."
+    Type="Variable" Display="advanced" Required="false" Mask="false" />
+  <!-- Logging -->
+  <Config Name="Verbose Server Logs" Target="VELOX_START_SERVER_VERBOSE" Default="false" Mode=""
+    Description="Set to true to enable verbose (-v) server logs (DEBUG level). Leave false for INFO only."
+    Type="Variable" Display="advanced" Required="false" Mask="false" />
+  <!-- Ports -->
+  <Config Name="Frontend / Client Ingress" Target="8000" Default="8000" Mode="tcp"
+    Description="Velociraptor frontend/client ingress port. Clients connect here." Type="Port"
+    Display="always" Required="true" Mask="false" />
+  <Config Name="API / gRPC Gateway" Target="8001" Default="8001" Mode="tcp"
+    Description="Velociraptor API/gRPC gateway port. Restrict to trusted networks only." Type="Port"
+    Display="advanced" Required="true" Mask="false" />
+  <Config Name="Web GUI (HTTPS)" Target="8889" Default="8889" Mode="tcp"
+    Description="Velociraptor Web GUI. Open https://[IP]:8889 in your browser." Type="Port"
+    Display="always" Required="true" Mask="false" />
+  <Config Name="Prometheus Metrics" Target="8003" Default="8003" Mode="tcp"
+    Description="Prometheus metrics endpoint. Restrict to monitoring network if not needed publicly."
+    Type="Port" Display="advanced" Required="false" Mask="false" />
+  <!-- Volumes -->
+  <Config Name="Velociraptor Data" Target="/velociraptor" Default="/mnt/user/appdata/velociraptor"
+    Mode="rw"
+    Description="Persistent data directory: config, keys, artifacts and repacked client bundles are all stored here."
+    Type="Path" Display="always" Required="true" Mask="false" />
 </Container>
