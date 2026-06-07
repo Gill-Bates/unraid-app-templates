@@ -19,14 +19,13 @@ Requirements:
   - Persistent storage configured for all listed paths
 
 IMPORTANT - Device Adoption:
-  Set UOS_SYSTEM_IP to the IP address or hostname of your Docker host.
-  Without this, UniFi devices cannot be adopted.
+  - Set UOS_SYSTEM_IP to the IP address or hostname of your Docker host.
+  - Without this, UniFi devices cannot be adopted.
 
 First Boot:
-    All services take 3-5 minutes to initialize on first start.
-    Do not access the GUI until startup is complete.
-    Monitor progress: Unraid Docker tab -> Container log, or:
-    docker logs -f unifi-os-server
+  - All services take 3-5 minutes to initialize on first start.
+  - Do not access the GUI until startup is complete.
+  - Monitor progress: Unraid Docker tab -> Container log, or:  docker logs -f unifi-os-server
 
 GUI Access:
 https://[your-unraid-ip]:11443
