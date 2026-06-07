@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<CommunityApplications>
+  <!-- Required: repository overview shown in the Community Apps maintainer profile -->
+  <Profile>
+    Docker app templates maintained by Gill-Bates for Unraid Community Apps.
+
+    This repository provides ready-to-use templates for the following Docker containers:
+
+    - **fritzinfluxdb** — Pushes Fritz!Box router call and connection data to InfluxDB for Grafana visualisation.
+    - **Velociraptor** — DFIR (Digital Forensics &amp; Incident Response) server with auto-generated config, multi-arch client repacks and a full web GUI.
+    - **UniFi OS Server** — Full UniFi OS stack (Network Application, Identity Hub, PostgreSQL, MongoDB, RabbitMQ, nginx) running as a single Docker container with systemd.
+
+    For support, bug reports, or template requests please open an issue on GitHub.
+  </Profile>
+
+  <!-- Icon shown on the maintainer profile page in Community Apps -->
+  <Icon>https://raw.githubusercontent.com/Gill-Bates/unraid-app-templates/main/icon.svg</Icon>
+
+  <!-- Primary homepage for this repository -->
+  <WebPage>https://github.com/Gill-Bates/unraid-app-templates</WebPage>
+
+  <!-- Optional: uncomment and fill in when a stable support thread exists -->
+  <!-- <Forum>https://forums.unraid.net/topic/YOUR_SUPPORT_TOPIC</Forum> -->
+
+  <!-- Optional: social / donation links -->
+  <!-- <Discord>https://discord.gg/YOUR_INVITE_CODE</Discord> -->
+  <!-- <DonateLink>https://github.com/sponsors/Gill-Bates</DonateLink> -->
+  <!-- <DonateText>Support this project</DonateText> -->
+</CommunityApplications>

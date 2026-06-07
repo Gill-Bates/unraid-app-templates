@@ -19,7 +19,7 @@ Docker: https://hub.docker.com/r/bbricardo/fritzinfluxdb
         </Overview>
         <Category>Network:Other, Tools:Utilities</Category>
         <WebUI></WebUI>
-        <TemplateURL>https://raw.githubusercontent.com/Gill-Bates/unraid-app-templates/main/community-apps/01_fritzboxinflux.xml</TemplateURL>
+        <TemplateURL>https://raw.githubusercontent.com/Gill-Bates/unraid-app-templates/main/templates/01_fritzboxinflux.xml</TemplateURL>
         <Icon>https://raw.githubusercontent.com/Gill-Bates/unraid-app-templates/main/icons/01_fritzboxinflux.png</Icon>
         <ExtraParams>--restart unless-stopped</ExtraParams>
         <PostArgs/>

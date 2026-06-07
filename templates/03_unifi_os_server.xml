@@ -42,7 +42,7 @@ Source: https://github.com/giiibates/unifi-os-server
   </Overview>
   <Category>Network:Management</Category>
   <WebUI>https://[IP]:[PORT:443]</WebUI>
-  <TemplateURL>https://raw.githubusercontent.com/Gill-Bates/unraid-app-templates/main/community-apps/03_unifi_os_server.xml</TemplateURL>
+  <TemplateURL>https://raw.githubusercontent.com/Gill-Bates/unraid-app-templates/main/templates/03_unifi_os_server.xml</TemplateURL>
   <Icon>https://raw.githubusercontent.com/Gill-Bates/unraid-app-templates/main/icons/03_unifi_os_server.png</Icon>
   <ExtraParams>--restart unless-stopped --cgroupns=host --cap-add=NET_RAW --cap-add=NET_ADMIN --stop-signal SIGRTMIN+3 --tmpfs /run:exec --tmpfs /run/lock --tmpfs /tmp:exec --tmpfs /var/lib/journal --tmpfs /var/opt/unifi/tmp:size=64m</ExtraParams>
   <PostArgs/>

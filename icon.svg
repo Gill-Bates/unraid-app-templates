@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00c6ff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#7b2ff7;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <!-- Background -->
+  <rect width="512" height="512" rx="80" ry="80" fill="#1a1a2e"/>
+  <!-- Server stack / container icon -->
+  <!-- Top face of the cube -->
+  <polygon points="256,80 400,160 256,240 112,160" fill="none" stroke="url(#grad)" stroke-width="14" stroke-linejoin="round"/>
+  <!-- Left face -->
+  <polygon points="112,160 256,240 256,400 112,320" fill="none" stroke="url(#grad)" stroke-width="14" stroke-linejoin="round"/>
+  <!-- Right face -->
+  <polygon points="400,160 256,240 256,400 400,320" fill="none" stroke="url(#grad)" stroke-width="14" stroke-linejoin="round"/>
+  <!-- Server rack lines on left face -->
+  <line x1="130" y1="205" x2="238" y2="265" stroke="url(#grad)" stroke-width="7" stroke-linecap="round" opacity="0.7"/>
+  <line x1="130" y1="237" x2="238" y2="297" stroke="url(#grad)" stroke-width="7" stroke-linecap="round" opacity="0.7"/>
+  <line x1="130" y1="269" x2="238" y2="329" stroke="url(#grad)" stroke-width="7" stroke-linecap="round" opacity="0.5"/>
+  <!-- Server rack lines on right face -->
+  <line x1="382" y1="205" x2="274" y2="265" stroke="url(#grad)" stroke-width="7" stroke-linecap="round" opacity="0.7"/>
+  <line x1="382" y1="237" x2="274" y2="297" stroke="url(#grad)" stroke-width="7" stroke-linecap="round" opacity="0.7"/>
+  <line x1="382" y1="269" x2="274" y2="329" stroke="url(#grad)" stroke-width="7" stroke-linecap="round" opacity="0.5"/>
+  <!-- G monogram in center -->
+  <text x="256" y="272" font-family="Arial, sans-serif" font-weight="bold" font-size="72" text-anchor="middle" dominant-baseline="middle" fill="url(#grad)" opacity="0.95">G</text>
+</svg>
