@@ -47,7 +47,7 @@ Source: https://github.com/giiibates/unifi-os-server
   <ExtraParams>--restart unless-stopped --cgroupns=host --cap-add=NET_RAW --cap-add=NET_ADMIN --stop-signal SIGRTMIN+3 --tmpfs /run:exec --tmpfs /run/lock --tmpfs /tmp:exec --tmpfs /var/lib/journal --tmpfs /var/opt/unifi/tmp:size=64m</ExtraParams>
   <PostArgs/>
   <CPUset/>
-  <Date>2026-06-02</Date>
+  <Date>2026-06-07</Date>
   <Changes>Set Privileged=false and add /sys/fs/cgroup:rw mount (required for systemd PID 1 without privileged). Fix WebUI container port (443), add PostgreSQL persistent volume, drop Privileged in favour of explicit caps, add tmpfs mounts and stop-signal, add missing ports, update Overview with Unraid version requirement and first-boot guidance.</Changes>
   <Networking>
     <Mode>bridge</Mode>
