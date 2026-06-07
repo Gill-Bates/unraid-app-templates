@@ -5,64 +5,103 @@
   <Registry>https://hub.docker.com/r/wlambert/velociraptor</Registry>
   <Network>bridge</Network>
   <MyIP/>
-  <MyMAC/>
   <Shell>sh</Shell>
   <Privileged>false</Privileged>
   <Support>https://github.com/weslambert/velociraptor-docker/issues</Support>
   <Project>https://github.com/weslambert/velociraptor-docker</Project>
-  <ReadMe/>
   <Overview>Velociraptor DFIR server running in Docker, adapted for Unraid.
 
 This template is based on the supplied docker-compose.yml and server.config.yaml.
 
 Mapped services:
-- Frontend / client ingress: 8000/tcp
-- API / gRPC gateway: 8001/tcp
-- Web GUI: 8889/tcp
+  - Frontend / client ingress: 8000/tcp
+  - API / gRPC gateway: 8001/tcp
+  - Web GUI: 8889/tcp
 
 Persistent paths:
-- /mnt/user/appdata/velociraptor -&amp;gt; /velociraptor
-- /mnt/user/appdata/velociraptor/logs -&amp;gt; /var/logs
+  - /mnt/user/appdata/velociraptor -> /velociraptor
+  - /mnt/user/appdata/velociraptor/logs -> /var/logs
 
 Important setup notes:
-- Put your server.config.yaml into /mnt/user/appdata/velociraptor/server.config.yaml before
-first start.
-- The supplied server.config.yaml binds Frontend, API and GUI to 0.0.0.0, which is
-compatible with bridge networking and Unraid port publishing.
-- The supplied server.config.yaml uses Logging.output_directory: ./logs, so logs are
-persisted under /mnt/user/appdata/velociraptor/logs.
-- The GUI uses TLS/self-signed or configured certificates. Browser certificate warnings can
-be expected unless a trusted certificate is configured.
-- Keep API port 8001 restricted to trusted networks only.
+  - Put your server.config.yaml into /mnt/user/appdata/velociraptor/server.config.yaml before first start.
+  - The supplied server.config.yaml binds Frontend, API and GUI to 0.0.0.0, which is compatible with bridge networking and Unraid port publishing.
+  - The supplied server.config.yaml uses Logging.output_directory: ./logs, so logs are persisted under /mnt/user/appdata/velociraptor/logs.
+  - The GUI uses TLS/self-signed or configured certificates. Browser certificate warnings can be expected unless a trusted certificate is configured.
+  - Keep API port 8001 restricted to trusted networks only.
 
-If you want to keep the custom Docker network from the compose file, create the network on
-Unraid first and then switch the container network manually from bridge to the custom
-network in the Unraid Docker UI.
+If you want to keep the custom Docker network from the compose file, create the network on Unraid first and then switch the container network manually from bridge to the custom network in the Unraid Docker UI.
 
 Troubleshooting:
-docker logs -f velociraptor
-docker exec -it velociraptor sh
+  docker logs -f velociraptor
+  docker exec -it velociraptor sh
 
 Source: https://github.com/weslambert/velociraptor-docker
-    </Overview>
-  <Category>Security: Network:Management</Category>
+  </Overview>
+  <Category>Tools:System</Category>
   <WebUI>https://[IP]:[PORT:8889]</WebUI>
-  <TemplateURL>        https://raw.githubusercontent.com/Gill-Bates/unraid-app-templates/main/community-apps/02_velociraptor.xml</TemplateURL>
+  <TemplateURL>https://raw.githubusercontent.com/Gill-Bates/unraid-app-templates/main/community-apps/02_velociraptor.xml</TemplateURL>
   <Icon>https://raw.githubusercontent.com/Gill-Bates/unraid-app-templates/main/icons/02_velociraptor.svg</Icon>
   <ExtraParams>--restart unless-stopped --security-opt=no-new-privileges:true</ExtraParams>
   <PostArgs/>
   <CPUset/>
-  <DateInstalled/>
-  <DonateText/>
-  <DonateLink/>
-  <Requires/>
-  <Config Name="Timezone" Target="TZ" Default="Europe/Berlin" Mode="" Description="Container timezone, for example Europe/Berlin." Type="Variable" Display="always" Required="false" Mask="false">UTC</Config>
-  <Config Name="Frontend / Client Ingress" Target="8000" Default="8000" Mode="tcp" Description="Velociraptor frontend/client ingress port from server.config.yaml Frontend.bind_port." Type="Port" Display="always" Required="true" Mask="false">8000</Config>
-  <Config Name="Web GUI" Target="8889" Default="8889" Mode="tcp" Description="Velociraptor Web GUI port from server.config.yaml GUI.bind_port." Type="Port" Display="always" Required="true" Mask="false">8889</Config>
-  <Config Name="Velociraptor Data" Target="/velociraptor" Default="/mnt/user/appdata/velociraptor" Mode="rw" Description="Persistent Velociraptor data directory. Put server.config.yaml here before first start." Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/velociraptor</Config>
-  <Config Name="Velociraptor Logs" Target="/var/logs" Default="/mnt/user/appdata/velociraptor/logs" Mode="rw" Description="Persistent log directory matching the supplied compose volume." Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/velociraptor/logs</Config>
-  <Config Name="PUID" Target="PUID" Default="1000" Mode="" Description="User ID used by the container where supported by the image." Type="Variable" Display="advanced" Required="false" Mask="false">1000</Config>
-  <Config Name="PGID" Target="PGID" Default="1000" Mode="" Description="Group ID used by the container where supported by the image." Type="Variable" Display="advanced" Required="false" Mask="false">1000</Config>
-  <Config Name="API / gRPC Gateway" Target="8001" Default="8001" Mode="tcp" Description="Velociraptor API/gRPC gateway port from server.config.yaml API.bind_port. Restrict access to trusted networks." Type="Port" Display="advanced" Required="true" Mask="false">8001</Config>
-  <TailscaleStateDir/>
+  <Date>2026-06-07</Date>
+  <Changes>Adapt template from UniFi OS Server to Velociraptor for Unraid. Set image to wlambert/velociraptor:latest, use bridge networking with published ports 8000/tcp, 8001/tcp and 8889/tcp, add /mnt/user/appdata/velociraptor persistent mappings, add PUID/PGID/TZ environment variables and keep privileged mode disabled with no-new-privileges.</Changes>
+  <Networking>
+    <Mode>bridge</Mode>
+    <Publish>
+      <Port>
+        <HostPort>8000</HostPort>
+        <ContainerPort>8000</ContainerPort>
+        <Protocol>tcp</Protocol>
+      </Port>
+      <Port>
+        <HostPort>8001</HostPort>
+        <ContainerPort>8001</ContainerPort>
+        <Protocol>tcp</Protocol>
+      </Port>
+      <Port>
+        <HostPort>8889</HostPort>
+        <ContainerPort>8889</ContainerPort>
+        <Protocol>tcp</Protocol>
+      </Port>
+    </Publish>
+  </Networking>
+  <Data>
+    <Volume>
+      <HostDir>/mnt/user/appdata/velociraptor</HostDir>
+      <ContainerDir>/velociraptor</ContainerDir>
+      <Mode>rw</Mode>
+    </Volume>
+    <Volume>
+      <HostDir>/mnt/user/appdata/velociraptor/logs</HostDir>
+      <ContainerDir>/var/logs</ContainerDir>
+      <Mode>rw</Mode>
+    </Volume>
+  </Data>
+  <Environment>
+    <Variable>
+      <Name>TZ</Name>
+      <Value>Europe/Berlin</Value>
+      <Mode/>
+    </Variable>
+    <Variable>
+      <Name>PUID</Name>
+      <Value>1000</Value>
+      <Mode/>
+    </Variable>
+    <Variable>
+      <Name>PGID</Name>
+      <Value>1000</Value>
+      <Mode/>
+    </Variable>
+  </Environment>
+  <!-- Configurations -->
+  <Config Name="Timezone" Target="TZ" Default="Europe/Berlin" Mode="" Description="Container timezone, for example Europe/Berlin." Type="Variable" Display="always" Required="false" Mask="false" />
+  <Config Name="PUID" Target="PUID" Default="1000" Mode="" Description="User ID used by the container where supported by the image." Type="Variable" Display="advanced" Required="false" Mask="false" />
+  <Config Name="PGID" Target="PGID" Default="1000" Mode="" Description="Group ID used by the container where supported by the image." Type="Variable" Display="advanced" Required="false" Mask="false" />
+  <Config Name="Frontend / Client Ingress" Target="8000" Default="8000" Mode="tcp" Description="Velociraptor frontend/client ingress port from server.config.yaml Frontend.bind_port." Type="Port" Display="always" Required="true" Mask="false" />
+  <Config Name="API / gRPC Gateway" Target="8001" Default="8001" Mode="tcp" Description="Velociraptor API/gRPC gateway port from server.config.yaml API.bind_port. Restrict access to trusted networks." Type="Port" Display="advanced" Required="true" Mask="false" />
+  <Config Name="Web GUI" Target="8889" Default="8889" Mode="tcp" Description="Velociraptor Web GUI port from server.config.yaml GUI.bind_port." Type="Port" Display="always" Required="true" Mask="false" />
+  <Config Name="Velociraptor Data" Target="/velociraptor" Default="/mnt/user/appdata/velociraptor" Mode="rw" Description="Persistent Velociraptor data directory. Put server.config.yaml here before first start." Type="Path" Display="always" Required="true" Mask="false" />
+  <Config Name="Velociraptor Logs" Target="/var/logs" Default="/mnt/user/appdata/velociraptor/logs" Mode="rw" Description="Persistent log directory matching the supplied compose volume." Type="Path" Display="always" Required="true" Mask="false" />
 </Container>
