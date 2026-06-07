@@ -51,7 +51,7 @@
   <TemplateURL>
     https://raw.githubusercontent.com/Gill-Bates/unraid-app-templates/main/community-apps/02_velociraptor.xml</TemplateURL>
   <Icon>
-    https://raw.githubusercontent.com/Gill-Bates/unraid-app-templates/main/icons/02_velociraptor.png</Icon>
+    https://raw.githubusercontent.com/Gill-Bates/unraid-app-templates/refs/heads/main/icons/02_velociraptor.png</Icon>
   <ExtraParams>--restart unless-stopped --security-opt=no-new-privileges:true</ExtraParams>
   <PostArgs />
   <CPUset />
