@@ -84,7 +84,7 @@ Docker: https://hub.docker.com/r/bbricardo/fritzinfluxdb
           </Variable>
           <Variable>
             <Name>TZ</Name>
-            <Value>Europe/Berlin</Value>
+            <Value>Etc/UTC</Value>
             <Mode/>
           </Variable>
         </Environment>
@@ -98,6 +98,6 @@ Docker: https://hub.docker.com/r/bbricardo/fritzinfluxdb
         <Config Name="INFLUXDB_TOKEN" Target="INFLUXDB_TOKEN" Default="" Mode="" Description="InfluxDB access token" Type="Variable" Display="always" Required="true" Mask="true" />
         <Config Name="INFLUXDB_PORT" Target="INFLUXDB_PORT" Default="" Mode="" Description="Port number used by InfluxDB" Type="Variable" Display="always" Required="true" Mask="false" />
         <Config Name="INFLUXDB_TLS_ENABLED" Target="INFLUXDB_TLS_ENABLED" Default="true" Mode="" Description="Use TLS/SSL when connecting to InfluxDB (true/false)" Type="Variable" Display="always" Required="true" Mask="false" />
-        <Config Name="TZ" Target="TZ" Default="Europe/Berlin" Mode="" Description="Timezone (e.g. Europe/Berlin)" Type="Variable" Display="always" Required="true" Mask="false" />
+        <Config Name="TZ" Target="TZ" Default="Etc/UTC" Mode="" Description="Timezone (e.g. Etc/UTC)" Type="Variable" Display="always" Required="true" Mask="false" />
         <Config Name="AppData Config" Target="/app/data" Default="/mnt/user/docker/container/fritzbox" Mode="rw" Description="Path for persistent container data" Type="Path" Display="always" Required="true" Mask="false" />
       </Container>
