@@ -81,7 +81,7 @@ Source: https://github.com/Gill-Bates/fetchly
     </Variable>
     <Variable>
       <Name>LOG_LEVEL</Name>
-      <Value>info</Value>
+      <Value>INFO</Value>
       <Mode/>
     </Variable>
     <Variable>
@@ -95,8 +95,8 @@ Source: https://github.com/Gill-Bates/fetchly
   <Config Name="Admin Password" Target="FETCHLY_ADMIN_PASSWORD" Default="" Mode="" Description="REQUIRED: Password for the admin login." Type="Variable" Display="always" Required="true" Mask="true" />
   <Config Name="Admin Username" Target="FETCHLY_ADMIN_USER" Default="admin" Mode="" Description="Admin login username" Type="Variable" Display="always" Required="false" Mask="false" />
   <Config Name="Behind HTTPS" Target="FETCHLY_BEHIND_HTTPS" Default="0" Mode="" Description="Set to '1' when serving over HTTPS (e.g. behind a reverse proxy) so session cookies are marked Secure" Type="Variable" Display="advanced" Required="false" Mask="false" />
-  <Config Name="Log Level" Target="LOG_LEVEL" Default="info" Mode="" Description="One of debug, info, warning, error" Type="Variable" Display="advanced" Required="false" Mask="false" />
-  <Config Name="Timezone" Target="TZ" Default="Europe/Berlin" Mode="" Description="Container timezone, used for timestamps in the UI and logs" Type="Variable" Display="always" Required="false" Mask="false" />
+  <Config Name="Log Level" Target="LOG_LEVEL" Default="INFO|DEBUG|WARNING|ERROR|CRITICAL" Mode="" Description="Verbosity of the container logs. Default: INFO. Use DEBUG only for troubleshooting - it is noisy." Type="Variable" Display="always" Required="false" Mask="false">INFO</Config>
+  <Config Name="Timezone" Target="TZ" Default="Etc/UTC" Mode="" Description="Container timezone (IANA name, e.g. Etc/UTC or Europe/Berlin), used for timestamps in the UI and logs" Type="Variable" Display="always" Required="false" Mask="false" />
   <Config Name="WebUI" Target="8000" Default="8000" Mode="tcp" Description="fetchly Web UI/API port" Type="Port" Display="always" Required="true" Mask="false" />
   <Config Name="Data" Target="/app/data" Default="/mnt/user/appdata/fetchly/data" Mode="rw" Description="Jobs, SQLite database, and downloads" Type="Path" Display="always" Required="true" Mask="false" />
 </Container>
