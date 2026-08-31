@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+<Container version="2">
+  <Name>fetchly</Name>
+  <Repository>giiibates/fetchly:latest</Repository>
+  <Registry>https://hub.docker.com/r/giiibates/fetchly</Registry>
+  <Network>bridge</Network>
+  <MyIP/>
+  <Shell>bash</Shell>
+  <Privileged>false</Privileged>
+  <Support>https://github.com/Gill-Bates/fetchly/issues</Support>
+  <Project>https://github.com/Gill-Bates/fetchly</Project>
+  <Overview>Self-hosted media downloader for YouTube, TikTok, Instagram &amp; Facebook.
+
+Paste a link, preview it, pick a format - with a live job dashboard, waveform audio trimming, and Lalal.ai stem separation.
+
+Features:
+  - Download video or audio from YouTube, TikTok, Instagram, and Facebook
+  - Live dashboard for queued, active, completed, and failed jobs
+  - Trim audio visually on an interactive waveform
+  - Optional Lalal.ai integration to split vocals/instrumentals (API key entered in-app under Settings)
+  - Authenticated access with CSRF protection, anti-bot checks, and login rate limiting
+
+IMPORTANT - Required Environment Variables:
+  - FETCHLY_SECRET_KEY: signs session cookies. Generate with: openssl rand -base64 32
+  - FETCHLY_ADMIN_PASSWORD: password for the admin login (username defaults to "admin")
+The container refuses to start without both of these set.
+
+Reverse Proxy:
+  - fetchly speaks plain HTTP inside the container. If terminating TLS at a reverse proxy, set FETCHLY_BEHIND_HTTPS=1 so session cookies are marked Secure.
+
+Only publicly accessible URLs work - private videos will not download.
+
+Source: https://github.com/Gill-Bates/fetchly
+  </Overview>
+  <Category>MediaApp:Video Tools:Utilities</Category>
+  <WebUI>http://[IP]:[PORT:8000]</WebUI>
+  <TemplateURL>https://raw.githubusercontent.com/Gill-Bates/unraid-app-templates/main/templates/04_fetchly.xml</TemplateURL>
+  <Icon>https://raw.githubusercontent.com/Gill-Bates/unraid-app-templates/main/icons/04_fetchly.png</Icon>
+  <ExtraParams>--restart unless-stopped</ExtraParams>
+  <PostArgs/>
+  <CPUset/>
+  <Date>2026-08-31</Date>
+  <Changes>Initial Unraid template for fetchly.</Changes>
+  <Networking>
+    <Mode>bridge</Mode>
+    <Publish>
+      <Port>
+        <HostPort>8000</HostPort>
+        <ContainerPort>8000</ContainerPort>
+        <Protocol>tcp</Protocol>
+      </Port>
+    </Publish>
+  </Networking>
+  <Data>
+    <Volume>
+      <HostDir>/mnt/user/appdata/fetchly/data</HostDir>
+      <ContainerDir>/app/data</ContainerDir>
+      <Mode>rw</Mode>
+    </Volume>
+  </Data>
+  <Environment>
+    <Variable>
+      <Name>FETCHLY_SECRET_KEY</Name>
+      <Value></Value>
+      <Mode/>
+    </Variable>
+    <Variable>
+      <Name>FETCHLY_ADMIN_PASSWORD</Name>
+      <Value></Value>
+      <Mode/>
+    </Variable>
+    <Variable>
+      <Name>FETCHLY_ADMIN_USER</Name>
+      <Value>admin</Value>
+      <Mode/>
+    </Variable>
+    <Variable>
+      <Name>FETCHLY_BEHIND_HTTPS</Name>
+      <Value>0</Value>
+      <Mode/>
+    </Variable>
+    <Variable>
+      <Name>LOG_LEVEL</Name>
+      <Value>info</Value>
+      <Mode/>
+    </Variable>
+    <Variable>
+      <Name>TZ</Name>
+      <Value>Etc/UTC</Value>
+      <Mode/>
+    </Variable>
+  </Environment>
+  <!-- Configurations -->
+  <Config Name="Secret Key" Target="FETCHLY_SECRET_KEY" Default="" Mode="" Description="REQUIRED: Signs session cookies. Generate with: openssl rand -base64 32. The app refuses to start without this." Type="Variable" Display="always" Required="true" Mask="true" />
+  <Config Name="Admin Password" Target="FETCHLY_ADMIN_PASSWORD" Default="" Mode="" Description="REQUIRED: Password for the admin login." Type="Variable" Display="always" Required="true" Mask="true" />
+  <Config Name="Admin Username" Target="FETCHLY_ADMIN_USER" Default="admin" Mode="" Description="Admin login username" Type="Variable" Display="always" Required="false" Mask="false" />
+  <Config Name="Behind HTTPS" Target="FETCHLY_BEHIND_HTTPS" Default="0" Mode="" Description="Set to '1' when serving over HTTPS (e.g. behind a reverse proxy) so session cookies are marked Secure" Type="Variable" Display="advanced" Required="false" Mask="false" />
+  <Config Name="Log Level" Target="LOG_LEVEL" Default="info" Mode="" Description="One of debug, info, warning, error" Type="Variable" Display="advanced" Required="false" Mask="false" />
+  <Config Name="Timezone" Target="TZ" Default="Europe/Berlin" Mode="" Description="Container timezone, used for timestamps in the UI and logs" Type="Variable" Display="always" Required="false" Mask="false" />
+  <Config Name="WebUI" Target="8000" Default="8000" Mode="tcp" Description="fetchly Web UI/API port" Type="Port" Display="always" Required="true" Mask="false" />
+  <Config Name="Data" Target="/app/data" Default="/mnt/user/appdata/fetchly/data" Mode="rw" Description="Jobs, SQLite database, and downloads" Type="Path" Display="always" Required="true" Mask="false" />
+</Container>
