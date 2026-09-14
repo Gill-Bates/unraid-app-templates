@@ -47,8 +47,8 @@ Source: https://github.com/giiibates/unifi-os-server
   <ExtraParams>--restart unless-stopped --cgroupns=host --cap-add=NET_RAW --cap-add=NET_ADMIN --stop-signal SIGRTMIN+3 --tmpfs /run:exec --tmpfs /run/lock --tmpfs /tmp:exec --tmpfs /var/lib/journal --tmpfs /var/opt/unifi/tmp:size=64m</ExtraParams>
   <PostArgs/>
   <CPUset/>
-  <Date>2026-06-07</Date>
-  <Changes>Set Privileged=false and add /sys/fs/cgroup:rw mount (required for systemd PID 1 without privileged). Fix WebUI container port (443), add PostgreSQL persistent volume, drop Privileged in favour of explicit caps, add tmpfs mounts and stop-signal, add missing ports, update Overview with Unraid version requirement and first-boot guidance.</Changes>
+  <Date>2026-09-14</Date>
+  <Changes>Show systemd journal in Docker logs and Hardware Platform now render as dropdowns instead of free text.</Changes>
   <Networking>
     <Mode>bridge</Mode>
     <Publish>
@@ -200,8 +200,8 @@ Source: https://github.com/giiibates/unifi-os-server
   </Environment>
   <!-- Configurations -->
   <Config Name="UOS System IP/Hostname" Target="UOS_SYSTEM_IP" Default="" Mode="" Description="REQUIRED: IP address or hostname of your Docker host (e.g. 192.168.1.10). Used for UniFi device adoption and remote management." Type="Variable" Display="always" Required="true" Mask="false" />
-  <Config Name="Hardware Platform" Target="HARDWARE_PLATFORM" Default="" Mode="" Description="Optional: Set to 'synology' if running on Synology NAS" Type="Variable" Display="always" Required="false" Mask="false" />
-  <Config Name="Show systemd journal in Docker logs" Target="UOS_SHOW_JOURNAL" Default="false" Mode="" Description="Set to 'true' to forward the full systemd journal to Docker logs. Default false shows only the startup banner and entrypoint summary." Type="Variable" Display="always" Required="false" Mask="false" />
+  <Config Name="Hardware Platform" Target="HARDWARE_PLATFORM" Default="|synology" Mode="" Description="Leave empty for standard hardware, or set to 'synology' if running on a Synology NAS." Type="Variable" Display="always" Required="false" Mask="false"></Config>
+  <Config Name="Show systemd journal in Docker logs" Target="UOS_SHOW_JOURNAL" Default="false|true" Mode="" Description="Forward the full systemd journal to Docker logs. Default false shows only the startup banner and entrypoint summary." Type="Variable" Display="always" Required="false" Mask="false">false</Config>
   <Config Name="Timezone" Target="TZ" Default="UTC" Mode="" Description="Container timezone (e.g. UTC, Europe/Berlin)" Type="Variable" Display="always" Required="false" Mask="false" />
   <Config Name="UniFi OS Server GUI" Target="443" Default="11443" Mode="tcp" Description="UniFi OS Server GUI/API Port (container listens on 443, mapped to host port 11443)" Type="Port" Display="always" Required="true" Mask="false" />
   <Config Name="Device Communication" Target="8080" Default="8080" Mode="tcp" Description="Device and application communication port (required for adoption)" Type="Port" Display="always" Required="true" Mask="false" />

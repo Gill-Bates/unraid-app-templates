@@ -39,8 +39,8 @@ Source: https://github.com/Gill-Bates/fetchly
   <ExtraParams>--restart unless-stopped</ExtraParams>
   <PostArgs/>
   <CPUset/>
-  <Date>2026-08-31</Date>
-  <Changes>Initial Unraid template for fetchly.</Changes>
+  <Date>2026-09-14</Date>
+  <Changes>Behind HTTPS now renders as a dropdown instead of free text.</Changes>
   <Networking>
     <Mode>bridge</Mode>
     <Publish>
@@ -94,7 +94,7 @@ Source: https://github.com/Gill-Bates/fetchly
   <Config Name="Secret Key" Target="FETCHLY_SECRET_KEY" Default="" Mode="" Description="REQUIRED: Signs session cookies. Generate with: openssl rand -base64 32. The app refuses to start without this." Type="Variable" Display="always" Required="true" Mask="true" />
   <Config Name="Admin Password" Target="FETCHLY_ADMIN_PASSWORD" Default="" Mode="" Description="REQUIRED: Password for the admin login." Type="Variable" Display="always" Required="true" Mask="true" />
   <Config Name="Admin Username" Target="FETCHLY_ADMIN_USER" Default="admin" Mode="" Description="Admin login username" Type="Variable" Display="always" Required="false" Mask="false" />
-  <Config Name="Behind HTTPS" Target="FETCHLY_BEHIND_HTTPS" Default="0" Mode="" Description="Set to '1' when serving over HTTPS (e.g. behind a reverse proxy) so session cookies are marked Secure" Type="Variable" Display="advanced" Required="false" Mask="false" />
+  <Config Name="Behind HTTPS" Target="FETCHLY_BEHIND_HTTPS" Default="0|1" Mode="" Description="Set to 1 when serving over HTTPS (e.g. behind a reverse proxy) so session cookies are marked Secure" Type="Variable" Display="advanced" Required="false" Mask="false">0</Config>
   <Config Name="Log Level" Target="LOG_LEVEL" Default="INFO|DEBUG|WARNING|ERROR|CRITICAL" Mode="" Description="Verbosity of the container logs. Default: INFO. Use DEBUG only for troubleshooting - it is noisy." Type="Variable" Display="always" Required="false" Mask="false">INFO</Config>
   <Config Name="Timezone" Target="TZ" Default="Etc/UTC" Mode="" Description="Container timezone (IANA name, e.g. Etc/UTC or Europe/Berlin), used for timestamps in the UI and logs" Type="Variable" Display="always" Required="false" Mask="false" />
   <Config Name="WebUI" Target="8000" Default="8000" Mode="tcp" Description="fetchly Web UI/API port" Type="Port" Display="always" Required="true" Mask="false" />

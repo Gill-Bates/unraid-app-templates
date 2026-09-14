@@ -5,7 +5,7 @@
   <Registry>https://hub.docker.com/r/xboarder56/velociraptor</Registry>
   <Network>bridge</Network>
   <MyIP />
-  <Shell>sh</Shell>
+  <Shell>bash</Shell>
   <Privileged>false</Privileged>
   <Support>https://github.com/Xboarder56/velociraptor-docker/issues</Support>
   <Project>https://github.com/Xboarder56/velociraptor-docker</Project>
@@ -55,13 +55,9 @@
   <ExtraParams>--restart unless-stopped --security-opt=no-new-privileges:true</ExtraParams>
   <PostArgs />
   <CPUset />
-  <Date>2026-06-07</Date>
-  <Changes>Update template to xboarder56/velociraptor fork: new image/repo URLs, add Prometheus port
-    8003, replace manual server.config.yaml requirement with runtime env-var configuration
-    (VELOX_DEFAULT_USER/PASSWORD, VELOX_FRONTEND_*, VELOX_GUI_*, VELOX_API_PORT,
-    VELOX_MONITORING_PORT, VELOX_START_SERVER_VERBOSE), remove /var/logs volume (logs now in
-    /velociraptor), update Overview for auto-generated config and multi-arch client repacks, add
-    Security category.</Changes>
+  <Date>2026-09-14</Date>
+  <Changes>Changed Shell to bash (image is ubuntu:26.04-based); Frontend Scheme, GUI Scheme, and
+    Verbose Server Logs now render as dropdowns instead of free text.</Changes>
   <Networking>
     <Mode>bridge</Mode>
     <Publish>
@@ -182,9 +178,9 @@
   <Config Name="Frontend Port" Target="VELOX_FRONTEND_PORT" Default="8000" Mode=""
     Description="Public-facing port clients use to reach the server (built into client URL)."
     Type="Variable" Display="always" Required="false" Mask="false" />
-  <Config Name="Frontend Scheme" Target="VELOX_FRONTEND_SERVER_SCHEME" Default="https" Mode=""
-    Description="Scheme for client URL: https (recommended) or http." Type="Variable"
-    Display="advanced" Required="false" Mask="false" />
+  <Config Name="Frontend Scheme" Target="VELOX_FRONTEND_SERVER_SCHEME" Default="https|http" Mode=""
+    Description="Scheme for client URL (https recommended)." Type="Variable"
+    Display="advanced" Required="false" Mask="false">https</Config>
   <Config Name="Frontend Server URL (override)" Target="VELOX_FRONTEND_SERVER_URL" Default=""
     Mode=""
     Description="Full client URL override, e.g. https://ingest.example.com:8000/ — overrides Hostname/Port/Scheme if set."
@@ -196,9 +192,9 @@
   <Config Name="GUI Port" Target="VELOX_GUI_PORT" Default="8889" Mode=""
     Description="Public-facing port for the admin GUI." Type="Variable" Display="always"
     Required="false" Mask="false" />
-  <Config Name="GUI Scheme" Target="VELOX_GUI_SCHEME" Default="https" Mode=""
-    Description="Scheme for GUI URL: https or http." Type="Variable" Display="advanced"
-    Required="false" Mask="false" />
+  <Config Name="GUI Scheme" Target="VELOX_GUI_SCHEME" Default="https|http" Mode=""
+    Description="Scheme for GUI URL." Type="Variable" Display="advanced"
+    Required="false" Mask="false">https</Config>
   <Config Name="GUI URL (override)" Target="VELOX_GUI_URL" Default="" Mode=""
     Description="Full GUI URL override, e.g. https://admin.example.com:8889/app/index.html — overrides GUI Hostname/Port/Scheme if set."
     Type="Variable" Display="advanced" Required="false" Mask="false" />
@@ -210,9 +206,9 @@
     Mode="" Description="Internal Prometheus metrics port. Only change if you have a port conflict."
     Type="Variable" Display="advanced" Required="false" Mask="false" />
   <!-- Logging -->
-  <Config Name="Verbose Server Logs" Target="VELOX_START_SERVER_VERBOSE" Default="false" Mode=""
-    Description="Set to true to enable verbose (-v) server logs (DEBUG level). Leave false for INFO only."
-    Type="Variable" Display="advanced" Required="false" Mask="false" />
+  <Config Name="Verbose Server Logs" Target="VELOX_START_SERVER_VERBOSE" Default="false|true" Mode=""
+    Description="Enable verbose (-v) server logs (DEBUG level). Leave false for INFO only."
+    Type="Variable" Display="advanced" Required="false" Mask="false">false</Config>
   <!-- Ports -->
   <Config Name="Frontend / Client Ingress" Target="8000" Default="8000" Mode="tcp"
     Description="Velociraptor frontend/client ingress port. Clients connect here." Type="Port"
