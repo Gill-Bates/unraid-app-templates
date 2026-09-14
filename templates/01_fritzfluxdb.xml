@@ -10,7 +10,11 @@
   <Privileged>false</Privileged>
   <Support>https://github.com/Gill-Bates/fritzfluxdb/issues</Support>
   <Project>https://github.com/Gill-Bates/fritzfluxdb</Project>
-  <Overview>Daemon that reads metrics from an AVM Fritz!Box (DSL/Cable, WLAN, VPN, home automation, logs) and writes them to InfluxDB v1, InfluxDB v2, or QuestDB. No Web UI. Configured entirely via environment variables. Grafana dashboards included. Source: https://github.com/Gill-Bates/fritzfluxdb</Overview>
+  <Overview>Daemon that reads metrics from an AVM Fritz!Box (DSL/Cable, WLAN, VPN, home automation, logs) and writes them to InfluxDB v1, InfluxDB v2, or QuestDB. No Web UI. Configured entirely via environment variables. Grafana dashboards included.&#13;
+&#13;
+Pick your backend with "Database Type", then fill in the shared "Database ..." fields. The INFLUXDB_* variables are the canonical settings and are used for QuestDB as well.&#13;
+&#13;
+Source: https://github.com/Gill-Bates/fritzfluxdb</Overview>
   <Category>Network:Other Tools:Utilities</Category>
   <WebUI/>
   <TemplateURL>https://raw.githubusercontent.com/Gill-Bates/unraid-app-templates/main/templates/01_fritzfluxdb.xml</TemplateURL>
@@ -19,7 +23,9 @@
   <PostArgs/>
   <CPUset/>
   <Date>2026-09-14</Date>
-  <Changes>Synced with v1.5.1: added QUESTDB_DATA_RETENTION_DAYS, QUESTDB_MEASUREMENT_NAME, QUESTDB_VERIFY_TLS, QUESTDB_ALLOW_PLAINTEXT_CREDENTIALS, INFLUXDB_VERIFY_TLS, INFLUXDB_ALLOW_PLAINTEXT_CREDENTIALS, FRITZBOX_PORT, FRITZBOX_TLS_ENABLED, FRITZBOX_VERIFY_TLS, FRITZBOX_CONNECT_TIMEOUT, FRITZBOX_BOX_TAG, FRITZBOX_TIMEZONE; re-added LOG_LEVEL (still in active use, previous removal note was incorrect); fixed DB_TYPE default to influxdb_v1 to match the daemon's actual default; changed Shell to bash; DB_TYPE, LOG_LEVEL and all boolean options now render as dropdowns.</Changes>
+  <Changes>Synced with v1.5.1: added QUESTDB_DATA_RETENTION_DAYS, QUESTDB_MEASUREMENT_NAME, QUESTDB_VERIFY_TLS, QUESTDB_ALLOW_PLAINTEXT_CREDENTIALS, INFLUXDB_VERIFY_TLS, INFLUXDB_ALLOW_PLAINTEXT_CREDENTIALS, FRITZBOX_PORT, FRITZBOX_TLS_ENABLED, FRITZBOX_VERIFY_TLS, FRITZBOX_CONNECT_TIMEOUT, FRITZBOX_BOX_TAG, FRITZBOX_TIMEZONE; re-added LOG_LEVEL (still in active use, previous removal note was incorrect); fixed DB_TYPE default to influxdb_v1 to match the daemon's actual default; changed Shell to bash; DB_TYPE, LOG_LEVEL and all boolean options now render as dropdowns. Fixed FRITZBOX_TLS_ENABLED: an empty pipe-list Default ("|true|false") with no selected inner value made Unraid write the literal string "|true|false" into the container env instead of an empty value, causing "Unable to parse '|true|false' for 'tls_enabled' as bool" on every start. Changed to a plain empty Default so the field is a free-text opt-in (leave empty for auto-detect, or enter true/false) instead of a broken dropdown.&#13;
+&#13;
+Consolidated the duplicated per-backend database settings into a single shared set. The nine QUESTDB_* fields were removed: the daemon only ever reads INFLUXDB_* and maps QUESTDB_* onto them as aliases, so two parallel field sets were redundant. Worse, a non-empty QUESTDB_HOSTNAME silently forced QuestDB mode even when DB_TYPE was influxdb_v1/v2, because the daemon infers the backend from that variable. With one hostname field the backend is now determined solely by DB_TYPE. Database Port now defaults to empty so the daemon can apply the correct per-backend default (8086 for InfluxDB, 9000 for QuestDB); QuestDB TTL is configured via INFLUXDB_DATA_RETENTION_DAYS. Existing installs are unaffected: their saved QUESTDB_* variables are still accepted as aliases by the daemon.</Changes>
 
   <!-- ── App Settings ─────────────────────────────────────────── -->
   <Config Name="Timezone" Target="TZ" Default="Europe/Berlin" Mode="" Description="Container timezone (e.g. Europe/Berlin, Etc/UTC). Fritz!Box timezone is auto-detected at startup." Type="Variable" Display="always" Required="false" Mask="false">Europe/Berlin</Config>
@@ -30,45 +36,30 @@
   <Config Name="Fritz!Box Username" Target="FRITZBOX_USERNAME" Default="" Mode="" Description="Fritz!Box login username." Type="Variable" Display="always" Required="true" Mask="false"/>
   <Config Name="Fritz!Box Password" Target="FRITZBOX_PASSWORD" Default="" Mode="" Description="Fritz!Box login password." Type="Variable" Display="always" Required="true" Mask="true"/>
   <Config Name="Fritz!Box Port" Target="FRITZBOX_PORT" Default="49000" Mode="" Description="Fritz!Box TR-064 port." Type="Variable" Display="advanced" Required="false" Mask="false">49000</Config>
-  <Config Name="Fritz!Box TLS" Target="FRITZBOX_TLS_ENABLED" Default="|true|false" Mode="" Description="Leave empty to automatically try HTTPS, or explicitly enable/disable it." Type="Variable" Display="advanced" Required="false" Mask="false"></Config>
+  <Config Name="Fritz!Box TLS" Target="FRITZBOX_TLS_ENABLED" Default="" Mode="" Description="Leave empty to automatically try HTTPS, or set to 'true'/'false' to explicitly enable/disable it." Type="Variable" Display="advanced" Required="false" Mask="false"></Config>
   <Config Name="Fritz!Box Verify TLS" Target="FRITZBOX_VERIFY_TLS" Default="true|false" Mode="" Description="Verify the Fritz!Box TLS certificate when using TLS." Type="Variable" Display="advanced" Required="false" Mask="false">true</Config>
   <Config Name="Fritz!Box Connect Timeout (s)" Target="FRITZBOX_CONNECT_TIMEOUT" Default="10" Mode="" Description="Connection timeout in seconds." Type="Variable" Display="advanced" Required="false" Mask="false">10</Config>
   <Config Name="Fritz!Box Request Interval (s)" Target="FRITZBOX_REQUEST_INTERVAL" Default="10" Mode="" Description="Seconds between TR-064 poll cycles (minimum 10)." Type="Variable" Display="advanced" Required="false" Mask="false">10</Config>
   <Config Name="Fritz!Box Box Tag" Target="FRITZBOX_BOX_TAG" Default="fritz.box" Mode="" Description="Custom tag to identify the Fritz!Box." Type="Variable" Display="advanced" Required="false" Mask="false">fritz.box</Config>
   <Config Name="Fritz!Box Timezone" Target="FRITZBOX_TIMEZONE" Default="Europe/Berlin" Mode="" Description="Fallback timezone for Fritz!Box log timestamps if auto-detection fails." Type="Variable" Display="advanced" Required="false" Mask="false">Europe/Berlin</Config>
 
-  <!-- ── Database Settings ─────────────────────────────────────── -->
-  <Config Name="Database Type" Target="DB_TYPE" Default="influxdb_v1|influxdb_v2|questdb" Mode="" Description="Target database." Type="Variable" Display="always" Required="true" Mask="false">influxdb_v1</Config>
+  <!-- ── Database Settings (one shared set for InfluxDB v1/v2 + QuestDB) ── -->
+  <Config Name="Database Type" Target="DB_TYPE" Default="influxdb_v1|influxdb_v2|questdb" Mode="" Description="Target database. Selects which of the credential fields below are used: influxdb_v1 needs Database name, influxdb_v2 needs Token/Organization/Bucket, questdb needs none of them." Type="Variable" Display="always" Required="true" Mask="false">influxdb_v1</Config>
+  <Config Name="Database Hostname/IP" Target="INFLUXDB_HOSTNAME" Default="" Mode="" Description="Hostname or IP of the target database (InfluxDB or QuestDB). A full URL is also accepted, e.g. https://questdb.example.com, in which case TLS and port are taken from the URL." Type="Variable" Display="always" Required="true" Mask="false"/>
+  <Config Name="Database Port" Target="INFLUXDB_PORT" Default="" Mode="" Description="Leave EMPTY to use the correct default for the selected Database Type (8086 for InfluxDB, 9000 for QuestDB). Only set this if your database listens on a non-standard port." Type="Variable" Display="always" Required="false" Mask="false"/>
+  <Config Name="Database TLS" Target="INFLUXDB_TLS_ENABLED" Default="false|true" Mode="" Description="Enable TLS (HTTPS) for the database connection." Type="Variable" Display="advanced" Required="false" Mask="false">false</Config>
+  <Config Name="Database Verify TLS" Target="INFLUXDB_VERIFY_TLS" Default="true|false" Mode="" Description="Verify the database TLS certificate." Type="Variable" Display="advanced" Required="false" Mask="false">true</Config>
+  <Config Name="Database Allow Plaintext Credentials" Target="INFLUXDB_ALLOW_PLAINTEXT_CREDENTIALS" Default="false|true" Mode="" Description="Allow sending credentials/token over plain HTTP to a remote host (trusted networks only)." Type="Variable" Display="advanced" Required="false" Mask="false">false</Config>
+  <Config Name="Measurement / Table Name" Target="INFLUXDB_MEASUREMENT_NAME" Default="fritzbox" Mode="" Description="InfluxDB measurement resp. QuestDB table name (overridden by the Fritz!Box serial number if available)." Type="Variable" Display="advanced" Required="false" Mask="false">fritzbox</Config>
 
-  <!-- ── InfluxDB Settings (v1 + v2) ──────────────────────────── -->
-  <Config Name="InfluxDB Hostname/IP" Target="INFLUXDB_HOSTNAME" Default="" Mode="" Description="Hostname or IP of the InfluxDB instance." Type="Variable" Display="always" Required="false" Mask="false"/>
-  <Config Name="InfluxDB Port" Target="INFLUXDB_PORT" Default="8086" Mode="" Description="InfluxDB port (default 8086)." Type="Variable" Display="always" Required="false" Mask="false">8086</Config>
-  <Config Name="InfluxDB TLS" Target="INFLUXDB_TLS_ENABLED" Default="false|true" Mode="" Description="Enable TLS for InfluxDB connection." Type="Variable" Display="advanced" Required="false" Mask="false">false</Config>
-  <Config Name="InfluxDB Verify TLS" Target="INFLUXDB_VERIFY_TLS" Default="true|false" Mode="" Description="Verify TLS certificate." Type="Variable" Display="advanced" Required="false" Mask="false">true</Config>
-  <Config Name="InfluxDB Allow Plaintext Credentials" Target="INFLUXDB_ALLOW_PLAINTEXT_CREDENTIALS" Default="false|true" Mode="" Description="Allow sending credentials/token over plain HTTP (trusted networks only)." Type="Variable" Display="advanced" Required="false" Mask="false">false</Config>
-  <Config Name="InfluxDB Measurement Name" Target="INFLUXDB_MEASUREMENT_NAME" Default="fritzbox" Mode="" Description="InfluxDB measurement / table name." Type="Variable" Display="advanced" Required="false" Mask="false">fritzbox</Config>
-
-  <!-- ── InfluxDB v2 Settings ──────────────────────────────────── -->
-  <Config Name="InfluxDB Token (v2)" Target="INFLUXDB_TOKEN" Default="" Mode="" Description="InfluxDB v2 API token." Type="Variable" Display="always" Required="false" Mask="true"/>
-  <Config Name="InfluxDB Organization (v2)" Target="INFLUXDB_ORGANIZATION" Default="" Mode="" Description="InfluxDB v2 organization name." Type="Variable" Display="always" Required="false" Mask="false"/>
-  <Config Name="InfluxDB Bucket (v2)" Target="INFLUXDB_BUCKET" Default="fritzflux" Mode="" Description="InfluxDB v2 bucket." Type="Variable" Display="always" Required="false" Mask="false">fritzflux</Config>
-
-  <!-- ── InfluxDB v1 Settings ──────────────────────────────────── -->
-  <Config Name="InfluxDB Database (v1)" Target="INFLUXDB_DATABASE" Default="fritzflux" Mode="" Description="InfluxDB v1 database name." Type="Variable" Display="advanced" Required="false" Mask="false">fritzflux</Config>
-  <Config Name="InfluxDB Username (v1)" Target="INFLUXDB_USERNAME" Default="" Mode="" Description="InfluxDB v1 username (optional)." Type="Variable" Display="advanced" Required="false" Mask="false"/>
-  <Config Name="InfluxDB Password (v1)" Target="INFLUXDB_PASSWORD" Default="" Mode="" Description="InfluxDB v1 password (optional)." Type="Variable" Display="advanced" Required="false" Mask="true"/>
-
-  <!-- ── QuestDB Settings ──────────────────────────────────────── -->
-  <Config Name="QuestDB Hostname/IP" Target="QUESTDB_HOSTNAME" Default="" Mode="" Description="Hostname or IP of the QuestDB instance (only for DB_TYPE=questdb)." Type="Variable" Display="always" Required="false" Mask="false"/>
-  <Config Name="QuestDB Port" Target="QUESTDB_PORT" Default="9000" Mode="" Description="QuestDB HTTP port (default 9000)." Type="Variable" Display="always" Required="false" Mask="false">9000</Config>
-  <Config Name="QuestDB TLS" Target="QUESTDB_TLS_ENABLED" Default="false|true" Mode="" Description="Enable TLS for QuestDB connection." Type="Variable" Display="advanced" Required="false" Mask="false">false</Config>
-  <Config Name="QuestDB Verify TLS" Target="QUESTDB_VERIFY_TLS" Default="true|false" Mode="" Description="Verify TLS certificate." Type="Variable" Display="advanced" Required="false" Mask="false">true</Config>
-  <Config Name="QuestDB Allow Plaintext Credentials" Target="QUESTDB_ALLOW_PLAINTEXT_CREDENTIALS" Default="false|true" Mode="" Description="Allow sending credentials/token over plain HTTP (trusted networks only)." Type="Variable" Display="advanced" Required="false" Mask="false">false</Config>
-  <Config Name="QuestDB Measurement Name" Target="QUESTDB_MEASUREMENT_NAME" Default="fritzbox" Mode="" Description="Base table name (overridden by serial if available)." Type="Variable" Display="advanced" Required="false" Mask="false">fritzbox</Config>
-  <Config Name="QuestDB Data Retention (days)" Target="QUESTDB_DATA_RETENTION_DAYS" Default="90" Mode="" Description="TTL in days, applied only to a table without an existing TTL; 0 disables it (requires QuestDB 8.2.2+)." Type="Variable" Display="advanced" Required="false" Mask="false">90</Config>
-  <Config Name="QuestDB Username" Target="QUESTDB_USERNAME" Default="" Mode="" Description="QuestDB username (optional)." Type="Variable" Display="advanced" Required="false" Mask="false"/>
-  <Config Name="QuestDB Password" Target="QUESTDB_PASSWORD" Default="" Mode="" Description="QuestDB password (optional)." Type="Variable" Display="advanced" Required="false" Mask="true"/>
-  <Config Name="QuestDB Token" Target="QUESTDB_TOKEN" Default="" Mode="" Description="QuestDB bearer token (optional)." Type="Variable" Display="advanced" Required="false" Mask="true"/>
+  <!-- ── Database Credentials ──────────────────────────────────── -->
+  <Config Name="Database Name (InfluxDB v1)" Target="INFLUXDB_DATABASE" Default="" Mode="" Description="InfluxDB v1 database name. Required for DB_TYPE=influxdb_v1, ignored otherwise." Type="Variable" Display="always" Required="false" Mask="false"/>
+  <Config Name="Database Username (InfluxDB v1 / QuestDB)" Target="INFLUXDB_USERNAME" Default="" Mode="" Description="Username for InfluxDB v1 or QuestDB basic authentication (optional). For InfluxDB v1 it must be set together with the password." Type="Variable" Display="always" Required="false" Mask="false"/>
+  <Config Name="Database Password (InfluxDB v1 / QuestDB)" Target="INFLUXDB_PASSWORD" Default="" Mode="" Description="Password for InfluxDB v1 or QuestDB basic authentication (optional). For InfluxDB v1 it must be set together with the username." Type="Variable" Display="always" Required="false" Mask="true"/>
+  <Config Name="Token (InfluxDB v2 / QuestDB)" Target="INFLUXDB_TOKEN" Default="" Mode="" Description="InfluxDB v2 API token (required for DB_TYPE=influxdb_v2) or QuestDB bearer token (optional)." Type="Variable" Display="always" Required="false" Mask="true"/>
+  <Config Name="Organization (InfluxDB v2)" Target="INFLUXDB_ORGANIZATION" Default="" Mode="" Description="InfluxDB v2 organization name. Required for DB_TYPE=influxdb_v2, ignored otherwise." Type="Variable" Display="always" Required="false" Mask="false"/>
+  <Config Name="Bucket (InfluxDB v2)" Target="INFLUXDB_BUCKET" Default="" Mode="" Description="InfluxDB v2 bucket. Required for DB_TYPE=influxdb_v2, ignored otherwise." Type="Variable" Display="always" Required="false" Mask="false"/>
+  <Config Name="Data Retention (days, QuestDB only)" Target="INFLUXDB_DATA_RETENTION_DAYS" Default="90" Mode="" Description="QuestDB only: TTL in days, applied only to a table without an existing TTL; 0 disables it (requires QuestDB 8.2.2+). Ignored for InfluxDB." Type="Variable" Display="advanced" Required="false" Mask="false">90</Config>
 
   <TailscaleStateDir/>
 </Container>
