@@ -19,19 +19,19 @@
   <PostArgs/>
   <CPUset/>
   <Date>2026-09-14</Date>
-  <Changes>Synced with v1.5.1: added QUESTDB_DATA_RETENTION_DAYS, QUESTDB_MEASUREMENT_NAME, QUESTDB_VERIFY_TLS, QUESTDB_ALLOW_PLAINTEXT_CREDENTIALS, INFLUXDB_VERIFY_TLS, INFLUXDB_ALLOW_PLAINTEXT_CREDENTIALS, FRITZBOX_PORT, FRITZBOX_TLS_ENABLED, FRITZBOX_VERIFY_TLS, FRITZBOX_CONNECT_TIMEOUT, FRITZBOX_BOX_TAG, FRITZBOX_TIMEZONE; re-added LOG_LEVEL (still in active use, previous removal note was incorrect); fixed DB_TYPE default to influxdb_v1 to match the daemon's actual default.</Changes>
+  <Changes>Synced with v1.5.1: added QUESTDB_DATA_RETENTION_DAYS, QUESTDB_MEASUREMENT_NAME, QUESTDB_VERIFY_TLS, QUESTDB_ALLOW_PLAINTEXT_CREDENTIALS, INFLUXDB_VERIFY_TLS, INFLUXDB_ALLOW_PLAINTEXT_CREDENTIALS, FRITZBOX_PORT, FRITZBOX_TLS_ENABLED, FRITZBOX_VERIFY_TLS, FRITZBOX_CONNECT_TIMEOUT, FRITZBOX_BOX_TAG, FRITZBOX_TIMEZONE; re-added LOG_LEVEL (still in active use, previous removal note was incorrect); fixed DB_TYPE default to influxdb_v1 to match the daemon's actual default; changed Shell to bash; DB_TYPE, LOG_LEVEL and all boolean options now render as dropdowns.</Changes>
 
   <!-- ── App Settings ─────────────────────────────────────────── -->
   <Config Name="Timezone" Target="TZ" Default="Europe/Berlin" Mode="" Description="Container timezone (e.g. Europe/Berlin, Etc/UTC). Fritz!Box timezone is auto-detected at startup." Type="Variable" Display="always" Required="false" Mask="false">Europe/Berlin</Config>
-  <Config Name="Log Level" Target="LOG_LEVEL" Default="INFO" Mode="" Description="Log level (DEBUG, INFO, WARNING, ERROR)." Type="Variable" Display="advanced" Required="false" Mask="false">INFO</Config>
+  <Config Name="Log Level" Target="LOG_LEVEL" Default="INFO|DEBUG|WARNING|ERROR" Mode="" Description="Log level." Type="Variable" Display="advanced" Required="false" Mask="false">INFO</Config>
 
   <!-- ── Fritz!Box Settings ────────────────────────────────────── -->
   <Config Name="Fritz!Box Hostname/IP" Target="FRITZBOX_HOSTNAME" Default="192.168.178.1" Mode="" Description="Hostname or IP of the Fritz!Box on your LAN." Type="Variable" Display="always" Required="true" Mask="false">192.168.178.1</Config>
   <Config Name="Fritz!Box Username" Target="FRITZBOX_USERNAME" Default="" Mode="" Description="Fritz!Box login username." Type="Variable" Display="always" Required="true" Mask="false"/>
   <Config Name="Fritz!Box Password" Target="FRITZBOX_PASSWORD" Default="" Mode="" Description="Fritz!Box login password." Type="Variable" Display="always" Required="true" Mask="true"/>
   <Config Name="Fritz!Box Port" Target="FRITZBOX_PORT" Default="49000" Mode="" Description="Fritz!Box TR-064 port." Type="Variable" Display="advanced" Required="false" Mask="false">49000</Config>
-  <Config Name="Fritz!Box TLS" Target="FRITZBOX_TLS_ENABLED" Default="" Mode="" Description="Automatically try HTTPS, or explicitly set true/false to enable/disable it." Type="Variable" Display="advanced" Required="false" Mask="false"/>
-  <Config Name="Fritz!Box Verify TLS" Target="FRITZBOX_VERIFY_TLS" Default="true" Mode="" Description="Verify the Fritz!Box TLS certificate when using TLS." Type="Variable" Display="advanced" Required="false" Mask="false">true</Config>
+  <Config Name="Fritz!Box TLS" Target="FRITZBOX_TLS_ENABLED" Default="|true|false" Mode="" Description="Leave empty to automatically try HTTPS, or explicitly enable/disable it." Type="Variable" Display="advanced" Required="false" Mask="false"></Config>
+  <Config Name="Fritz!Box Verify TLS" Target="FRITZBOX_VERIFY_TLS" Default="true|false" Mode="" Description="Verify the Fritz!Box TLS certificate when using TLS." Type="Variable" Display="advanced" Required="false" Mask="false">true</Config>
   <Config Name="Fritz!Box Connect Timeout (s)" Target="FRITZBOX_CONNECT_TIMEOUT" Default="10" Mode="" Description="Connection timeout in seconds." Type="Variable" Display="advanced" Required="false" Mask="false">10</Config>
   <Config Name="Fritz!Box Request Interval (s)" Target="FRITZBOX_REQUEST_INTERVAL" Default="10" Mode="" Description="Seconds between TR-064 poll cycles (minimum 10)." Type="Variable" Display="advanced" Required="false" Mask="false">10</Config>
   <Config Name="Fritz!Box Box Tag" Target="FRITZBOX_BOX_TAG" Default="fritz.box" Mode="" Description="Custom tag to identify the Fritz!Box." Type="Variable" Display="advanced" Required="false" Mask="false">fritz.box</Config>
@@ -43,9 +43,9 @@
   <!-- ── InfluxDB Settings (v1 + v2) ──────────────────────────── -->
   <Config Name="InfluxDB Hostname/IP" Target="INFLUXDB_HOSTNAME" Default="" Mode="" Description="Hostname or IP of the InfluxDB instance." Type="Variable" Display="always" Required="false" Mask="false"/>
   <Config Name="InfluxDB Port" Target="INFLUXDB_PORT" Default="8086" Mode="" Description="InfluxDB port (default 8086)." Type="Variable" Display="always" Required="false" Mask="false">8086</Config>
-  <Config Name="InfluxDB TLS" Target="INFLUXDB_TLS_ENABLED" Default="false" Mode="" Description="Enable TLS for InfluxDB connection (true/false)." Type="Variable" Display="advanced" Required="false" Mask="false">false</Config>
-  <Config Name="InfluxDB Verify TLS" Target="INFLUXDB_VERIFY_TLS" Default="true" Mode="" Description="Verify TLS certificate." Type="Variable" Display="advanced" Required="false" Mask="false">true</Config>
-  <Config Name="InfluxDB Allow Plaintext Credentials" Target="INFLUXDB_ALLOW_PLAINTEXT_CREDENTIALS" Default="false" Mode="" Description="Allow sending credentials/token over plain HTTP (trusted networks only)." Type="Variable" Display="advanced" Required="false" Mask="false">false</Config>
+  <Config Name="InfluxDB TLS" Target="INFLUXDB_TLS_ENABLED" Default="false|true" Mode="" Description="Enable TLS for InfluxDB connection." Type="Variable" Display="advanced" Required="false" Mask="false">false</Config>
+  <Config Name="InfluxDB Verify TLS" Target="INFLUXDB_VERIFY_TLS" Default="true|false" Mode="" Description="Verify TLS certificate." Type="Variable" Display="advanced" Required="false" Mask="false">true</Config>
+  <Config Name="InfluxDB Allow Plaintext Credentials" Target="INFLUXDB_ALLOW_PLAINTEXT_CREDENTIALS" Default="false|true" Mode="" Description="Allow sending credentials/token over plain HTTP (trusted networks only)." Type="Variable" Display="advanced" Required="false" Mask="false">false</Config>
   <Config Name="InfluxDB Measurement Name" Target="INFLUXDB_MEASUREMENT_NAME" Default="fritzbox" Mode="" Description="InfluxDB measurement / table name." Type="Variable" Display="advanced" Required="false" Mask="false">fritzbox</Config>
 
   <!-- ── InfluxDB v2 Settings ──────────────────────────────────── -->
@@ -61,9 +61,9 @@
   <!-- ── QuestDB Settings ──────────────────────────────────────── -->
   <Config Name="QuestDB Hostname/IP" Target="QUESTDB_HOSTNAME" Default="" Mode="" Description="Hostname or IP of the QuestDB instance (only for DB_TYPE=questdb)." Type="Variable" Display="always" Required="false" Mask="false"/>
   <Config Name="QuestDB Port" Target="QUESTDB_PORT" Default="9000" Mode="" Description="QuestDB HTTP port (default 9000)." Type="Variable" Display="always" Required="false" Mask="false">9000</Config>
-  <Config Name="QuestDB TLS" Target="QUESTDB_TLS_ENABLED" Default="false" Mode="" Description="Enable TLS for QuestDB connection (true/false)." Type="Variable" Display="advanced" Required="false" Mask="false">false</Config>
-  <Config Name="QuestDB Verify TLS" Target="QUESTDB_VERIFY_TLS" Default="true" Mode="" Description="Verify TLS certificate." Type="Variable" Display="advanced" Required="false" Mask="false">true</Config>
-  <Config Name="QuestDB Allow Plaintext Credentials" Target="QUESTDB_ALLOW_PLAINTEXT_CREDENTIALS" Default="false" Mode="" Description="Allow sending credentials/token over plain HTTP (trusted networks only)." Type="Variable" Display="advanced" Required="false" Mask="false">false</Config>
+  <Config Name="QuestDB TLS" Target="QUESTDB_TLS_ENABLED" Default="false|true" Mode="" Description="Enable TLS for QuestDB connection." Type="Variable" Display="advanced" Required="false" Mask="false">false</Config>
+  <Config Name="QuestDB Verify TLS" Target="QUESTDB_VERIFY_TLS" Default="true|false" Mode="" Description="Verify TLS certificate." Type="Variable" Display="advanced" Required="false" Mask="false">true</Config>
+  <Config Name="QuestDB Allow Plaintext Credentials" Target="QUESTDB_ALLOW_PLAINTEXT_CREDENTIALS" Default="false|true" Mode="" Description="Allow sending credentials/token over plain HTTP (trusted networks only)." Type="Variable" Display="advanced" Required="false" Mask="false">false</Config>
   <Config Name="QuestDB Measurement Name" Target="QUESTDB_MEASUREMENT_NAME" Default="fritzbox" Mode="" Description="Base table name (overridden by serial if available)." Type="Variable" Display="advanced" Required="false" Mask="false">fritzbox</Config>
   <Config Name="QuestDB Data Retention (days)" Target="QUESTDB_DATA_RETENTION_DAYS" Default="90" Mode="" Description="TTL in days, applied only to a table without an existing TTL; 0 disables it (requires QuestDB 8.2.2+)." Type="Variable" Display="advanced" Required="false" Mask="false">90</Config>
   <Config Name="QuestDB Username" Target="QUESTDB_USERNAME" Default="" Mode="" Description="QuestDB username (optional)." Type="Variable" Display="advanced" Required="false" Mask="false"/>
