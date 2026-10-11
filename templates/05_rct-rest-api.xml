@@ -1,0 +1,106 @@
+<?xml version="1.0"?>
+<Container version="2">
+  <Name>rct-rest-api</Name>
+  <Repository>giiibates/rct-manager:latest</Repository>
+  <Registry>https://hub.docker.com/r/giiibates/rct-manager</Registry>
+  <Network>bridge</Network>
+  <MyIP/>
+  <Shell>bash</Shell>
+  <Privileged>false</Privileged>
+  <Support>https://github.com/Gill-Bates/rct-manager/issues</Support>
+  <Project>https://github.com/Gill-Bates/rct-manager</Project>
+  <Doku>https://gill-bates.github.io/rct-manager/</Doku>
+  <Overview>Vendor-neutral REST gateway for RCT Power inverters. Speaks the RCT serial protocol over TCP to one or more inverters and turns it into clean JSON, a Prometheus endpoint, and optional, guarded write access. No vendor app, no protocol knowledge needed.
+
+Features:
+  - Read any metric from the full protocol catalog (894 of 895 IDs), partial success on multi-metric requests, RFC 9457 error responses
+  - Energy Manager for dynamic electricity tariffs: charge the battery from the grid or discharge it to the house with a target state of charge, power limit and duration
+  - Data export to your own InfluxDB 2 or QuestDB for Grafana, Telegraf and custom analysis
+  - Administration GUI: Overview, Inverters, Energy Manager, TSDB, Prometheus, API tokens and Settings pages with autosave
+  - Ready-made /metrics endpoint for Telegraf, Grafana and friends; a scrape never touches the inverter
+  - API token authentication, separate admin sessions, read and read/write roles, encrypted SQLite administration storage
+  - Guarded writes: off by default, allowlist-based, with readback confirmation
+  - Several inverters behind one API, requests per endpoint serialized so the device never sees a conflict
+  - Hardened container: read-only root filesystem, all capabilities dropped, non-root user, built-in health check
+
+IMPORTANT - Required Environment Variable:
+  - HMAC_SECRET: encrypts the administration database (data/rct.db). Generate with: openssl rand -base64 32. Changing it afterwards makes the database unreadable.
+
+First start:
+  The container logs a boxed "FIRST START - admin login" block with the one-time "admin" password in clear text (also saved to /app/data/initial-admin-password as a fallback). The first login requires a password change. Until then, periodic reads, heartbeat and metric export stay paused.
+
+Reverse Proxy:
+  rct-rest-api speaks plain HTTP inside the container. Enable "behind reverse proxy" on the admin Settings page when terminating TLS in front of it.
+
+Multi-arch image: linux/amd64 and linux/arm64, published with Trivy scanning, an SBOM and a provenance attestation.
+
+Source: https://github.com/Gill-Bates/rct-manager
+  </Overview>
+  <Category>HomeAutomation: Tools:Utilities</Category>
+  <WebUI>http://[IP]:[PORT:8000]</WebUI>
+  <TemplateURL>https://raw.githubusercontent.com/Gill-Bates/unraid-app-templates/main/templates/05_rct-rest-api.xml</TemplateURL>
+  <Icon>https://raw.githubusercontent.com/Gill-Bates/unraid-app-templates/main/icons/05_rct-magager.png</Icon>
+  <ExtraParams>--restart unless-stopped --security-opt=no-new-privileges:true --cap-drop=ALL --cap-add=CHOWN --cap-add=SETUID --cap-add=SETGID --read-only --tmpfs /tmp:rw,noexec,nosuid,nodev,size=1m,mode=1777</ExtraParams>
+  <PostArgs/>
+  <CPUset/>
+  <Date>2026-10-11</Date>
+  <Changes>Updated for the 1.0.0 release: image giiibates/rct-manager, container port 8000, Energy Manager and InfluxDB 2/QuestDB export added, timezone variable removed (defaults to UTC).</Changes>
+  <Networking>
+    <Mode>bridge</Mode>
+    <Publish>
+      <Port>
+        <HostPort>8000</HostPort>
+        <ContainerPort>8000</ContainerPort>
+        <Protocol>tcp</Protocol>
+      </Port>
+    </Publish>
+  </Networking>
+  <Data>
+    <Volume>
+      <HostDir>/mnt/user/appdata/rct-rest-api/data</HostDir>
+      <ContainerDir>/app/data</ContainerDir>
+      <Mode>rw</Mode>
+    </Volume>
+  </Data>
+  <Environment>
+    <Variable>
+      <Name>HMAC_SECRET</Name>
+      <Value></Value>
+      <Mode/>
+    </Variable>
+    <Variable>
+      <Name>BIND_ADDRESS</Name>
+      <Value>0.0.0.0</Value>
+      <Mode/>
+    </Variable>
+    <Variable>
+      <Name>BIND_PORT</Name>
+      <Value>8000</Value>
+      <Mode/>
+    </Variable>
+    <Variable>
+      <Name>ALLOW_NON_LOOPBACK_BIND</Name>
+      <Value>true</Value>
+      <Mode/>
+    </Variable>
+    <Variable>
+      <Name>DOCS_PUBLIC</Name>
+      <Value>false</Value>
+      <Mode/>
+    </Variable>
+    <Variable>
+      <Name>LOG_LEVEL</Name>
+      <Value>INFO</Value>
+      <Mode/>
+    </Variable>
+  </Environment>
+  <!-- Configurations -->
+  <Config Name="HMAC Secret" Target="HMAC_SECRET" Default="" Mode="" Description="REQUIRED: Encrypts the administration database (data/rct.db). Generate with: openssl rand -base64 32. Changing it afterwards makes the database unreadable - back it up together with the data volume." Type="Variable" Display="always" Required="true" Mask="true" />
+  <Config Name="Bind Address" Target="BIND_ADDRESS" Default="0.0.0.0" Mode="" Description="Listen address inside the container. Leave at 0.0.0.0 so the published port reaches the service; a loopback value makes the container unreachable through the port mapping." Type="Variable" Display="advanced" Required="false" Mask="false">0.0.0.0</Config>
+  <Config Name="Bind Port" Target="BIND_PORT" Default="8000" Mode="" Description="Listen port inside the container. Must match the container port in the WebUI/Port mapping below." Type="Variable" Display="advanced" Required="false" Mask="false">8000</Config>
+  <Config Name="Allow Non-Loopback Bind" Target="ALLOW_NON_LOOPBACK_BIND" Default="true|false" Mode="" Description="Explicit consent for a non-loopback listener inside the container. Does not provide TLS; terminate TLS at a reverse proxy and enable 'behind reverse proxy' on the admin Settings page." Type="Variable" Display="advanced" Required="false" Mask="false">true</Config>
+  <Config Name="Public API Docs" Target="DOCS_PUBLIC" Default="false|true" Mode="" Description="true: serve /docs and /openapi.json without a token. false: both return 404 on every bind address." Type="Variable" Display="advanced" Required="false" Mask="false">false</Config>
+  <Config Name="Log Level" Target="LOG_LEVEL" Default="INFO|DEBUG|WARNING|ERROR" Mode="" Description="Verbosity of the container logs." Type="Variable" Display="always" Required="false" Mask="false">INFO</Config>
+  <Config Name="WebUI" Target="8000" Default="8000" Mode="tcp" Description="rct-rest-api Web UI/API port (container listens on 8000, mapped to host port 8000 by default)." Type="Port" Display="always" Required="true" Mask="false" />
+  <Config Name="Data" Target="/app/data" Default="/mnt/user/appdata/rct-rest-api/data" Mode="rw" Description="Encrypted administration database (devices, API tokens, settings), dispatch state and the one-time admin password fallback. Back up together with HMAC_SECRET." Type="Path" Display="always" Required="true" Mask="false" />
+</Container>

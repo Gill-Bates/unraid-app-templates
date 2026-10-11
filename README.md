@@ -14,13 +14,17 @@ unraid-app-templates/
   icon.svg
   ca_profile.xml
   templates/
-    01_fritzboxinflux.xml
+    01_fritzfluxdb.xml
     02_velociraptor.xml
     03_unifi_os_server.xml
+    04_fetchly.xml
+    05_rct-rest-api.xml
   icons/
     01_fritzboxinflux.png
     02_velociraptor.png
     03_unifi_os_server.png
+    04_fetchly.png
+    05_rct-magager.png
 ```
 
 - **templates/** — XML templates for each Docker app (one file per app).
@@ -37,6 +41,8 @@ unraid-app-templates/
 | **fritzinfluxdb** | Pushes Fritz!Box router data to InfluxDB for Grafana dashboards |
 | **Velociraptor** | DFIR server with auto-config, multi-arch client repacks and web GUI |
 | **UniFi OS Server** | Full UniFi OS stack in Docker (Network App, Identity Hub, PostgreSQL, MongoDB) |
+| **fetchly** | Self-hosted media downloader for YouTube, TikTok, Instagram & Facebook |
+| **rct-rest-api** | Vendor-neutral REST gateway for RCT Power inverters |
 
 ---
 
