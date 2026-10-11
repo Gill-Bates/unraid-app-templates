@@ -1,6 +1,8 @@
 # OS
 .DS_Store
 Thumbs.db
+# Windows NTFS alternate data streams copied from downloaded files
+*:Zone.Identifier
 
 # Editors
 .vscode/
