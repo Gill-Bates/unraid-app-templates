@@ -10,7 +10,8 @@
   <Support>https://github.com/Gill-Bates/rct-manager/issues</Support>
   <Project>https://github.com/Gill-Bates/rct-manager</Project>
   <Doku>https://gill-bates.github.io/rct-manager/</Doku>
-  <Overview>Vendor-neutral REST gateway for RCT Power inverters. Speaks the RCT serial protocol over TCP to one or more inverters and turns it into clean JSON, a Prometheus endpoint, and optional, guarded write access. No vendor app, no protocol knowledge needed.
+  <Overview>REST API gateway for RCT Power inverters — readings, controls, metrics, admin GUI in one service.
+
 
 Features:
   - Read any metric from the full protocol catalog (894 of 895 IDs), partial success on multi-metric requests, RFC 9457 error responses
