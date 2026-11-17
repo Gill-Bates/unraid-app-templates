@@ -9,94 +9,27 @@
   <Privileged>false</Privileged>
   <Support>https://github.com/Gill-Bates/fetchly/issues</Support>
   <Project>https://github.com/Gill-Bates/fetchly</Project>
-  <Overview>Self-hosted media downloader for YouTube, TikTok, Instagram &amp; Facebook.
-
-Paste a link, preview it, pick a format - with a live job dashboard, waveform audio trimming, and Lalal.ai stem separation.
-
-Features:
-  - Download video or audio from YouTube, TikTok, Instagram, and Facebook
-  - Live dashboard for queued, active, completed, and failed jobs
-  - Trim audio visually on an interactive waveform
-  - Optional Lalal.ai integration to split vocals/instrumentals (API key entered in-app under Settings)
-  - Authenticated access with CSRF protection, anti-bot checks, and login rate limiting
-
-IMPORTANT - Required Environment Variables:
-  - FETCHLY_SECRET_KEY: signs session cookies. Generate with: openssl rand -base64 32
-  - FETCHLY_ADMIN_PASSWORD: password for the admin login (username defaults to "admin")
-The container refuses to start without both of these set.
-
-Reverse Proxy:
-  - fetchly speaks plain HTTP inside the container. If terminating TLS at a reverse proxy, set FETCHLY_BEHIND_HTTPS=1 so session cookies are marked Secure.
-
-Only publicly accessible URLs work - private videos will not download.
-
-Source: https://github.com/Gill-Bates/fetchly
-  </Overview>
+  <ReadMe>https://gill-bates.github.io/fetchly/getting-started/quick-start/</ReadMe>
+  <Overview>Save video and audio from YouTube, TikTok, Instagram and Facebook in your own library. Paste a link, preview the media, choose a format and follow each download live.&#13;
+&#13;
+Trim audio on an interactive waveform, or use the optional Lalal.ai integration to separate vocals and instruments. Downloads and settings stay in your persistent data folder.&#13;
+&#13;
+First launch has no admin account. Create your username and password in Settings &gt; Security immediately; this template makes the Web UI reachable from your LAN. Keep the secret key and data folder when updating.</Overview>
   <Category>MediaApp:Video Tools:Utilities</Category>
   <WebUI>http://[IP]:[PORT:8000]</WebUI>
   <TemplateURL>https://raw.githubusercontent.com/Gill-Bates/unraid-app-templates/main/templates/04_fetchly.xml</TemplateURL>
   <Icon>https://raw.githubusercontent.com/Gill-Bates/unraid-app-templates/main/icons/04_fetchly.png</Icon>
-  <ExtraParams>--restart unless-stopped</ExtraParams>
+  <ExtraParams>--restart always --stop-timeout 20 --security-opt no-new-privileges:true --cap-drop ALL --cap-add CHOWN --cap-add DAC_OVERRIDE --cap-add FOWNER --cap-add SETUID --cap-add SETGID</ExtraParams>
   <PostArgs/>
   <CPUset/>
-  <Date>2026-09-14</Date>
-  <Changes>Behind HTTPS now renders as a dropdown instead of free text.</Changes>
-  <Networking>
-    <Mode>bridge</Mode>
-    <Publish>
-      <Port>
-        <HostPort>8000</HostPort>
-        <ContainerPort>8000</ContainerPort>
-        <Protocol>tcp</Protocol>
-      </Port>
-    </Publish>
-  </Networking>
-  <Data>
-    <Volume>
-      <HostDir>/mnt/user/appdata/fetchly/data</HostDir>
-      <ContainerDir>/app/data</ContainerDir>
-      <Mode>rw</Mode>
-    </Volume>
-  </Data>
-  <Environment>
-    <Variable>
-      <Name>FETCHLY_SECRET_KEY</Name>
-      <Value></Value>
-      <Mode/>
-    </Variable>
-    <Variable>
-      <Name>FETCHLY_ADMIN_PASSWORD</Name>
-      <Value></Value>
-      <Mode/>
-    </Variable>
-    <Variable>
-      <Name>FETCHLY_ADMIN_USER</Name>
-      <Value>admin</Value>
-      <Mode/>
-    </Variable>
-    <Variable>
-      <Name>FETCHLY_BEHIND_HTTPS</Name>
-      <Value>0</Value>
-      <Mode/>
-    </Variable>
-    <Variable>
-      <Name>LOG_LEVEL</Name>
-      <Value>INFO</Value>
-      <Mode/>
-    </Variable>
-    <Variable>
-      <Name>TZ</Name>
-      <Value>Etc/UTC</Value>
-      <Mode/>
-    </Variable>
-  </Environment>
-  <!-- Configurations -->
-  <Config Name="Secret Key" Target="FETCHLY_SECRET_KEY" Default="" Mode="" Description="REQUIRED: Signs session cookies. Generate with: openssl rand -base64 32. The app refuses to start without this." Type="Variable" Display="always" Required="true" Mask="true" />
-  <Config Name="Admin Password" Target="FETCHLY_ADMIN_PASSWORD" Default="" Mode="" Description="REQUIRED: Password for the admin login." Type="Variable" Display="always" Required="true" Mask="true" />
-  <Config Name="Admin Username" Target="FETCHLY_ADMIN_USER" Default="admin" Mode="" Description="Admin login username" Type="Variable" Display="always" Required="false" Mask="false" />
-  <Config Name="Behind HTTPS" Target="FETCHLY_BEHIND_HTTPS" Default="0|1" Mode="" Description="Set to 1 when serving over HTTPS (e.g. behind a reverse proxy) so session cookies are marked Secure" Type="Variable" Display="advanced" Required="false" Mask="false">0</Config>
-  <Config Name="Log Level" Target="LOG_LEVEL" Default="INFO|DEBUG|WARNING|ERROR|CRITICAL" Mode="" Description="Verbosity of the container logs. Default: INFO. Use DEBUG only for troubleshooting - it is noisy." Type="Variable" Display="always" Required="false" Mask="false">INFO</Config>
-  <Config Name="Timezone" Target="TZ" Default="Etc/UTC" Mode="" Description="Container timezone (IANA name, e.g. Etc/UTC or Europe/Berlin), used for timestamps in the UI and logs" Type="Variable" Display="always" Required="false" Mask="false" />
-  <Config Name="WebUI" Target="8000" Default="8000" Mode="tcp" Description="fetchly Web UI/API port" Type="Port" Display="always" Required="true" Mask="false" />
-  <Config Name="Data" Target="/app/data" Default="/mnt/user/appdata/fetchly/data" Mode="rw" Description="Jobs, SQLite database, and downloads" Type="Path" Display="always" Required="true" Mask="false" />
+  <Date>2026-11-17</Date>
+  <Changes>Updated the first-run guidance: create the admin account in the Web UI, not with environment variables. Added proxy settings and matched the container's restart, shutdown and capability settings.</Changes>
+
+  <Config Name="Secret Key" Target="FETCHLY_SECRET_KEY" Default="" Mode="" Description="Required persistent key for sessions and anti-bot tokens. Generate with: openssl rand -base64 32. Keep it when updating the container." Type="Variable" Display="always" Required="true" Mask="true"/>
+  <Config Name="Web UI Port" Target="8000" Default="8000" Mode="tcp" Description="Host port for the fetchly Web UI. The initial setup is reachable from your LAN; create an admin account immediately." Type="Port" Display="always" Required="true" Mask="false">8000</Config>
+  <Config Name="Persistent Data" Target="/app/data" Default="/mnt/user/appdata/fetchly/data" Mode="rw" Description="SQLite database, downloads, job files, cookies and caches. Keep this path when updating." Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/fetchly/data</Config>
+  <Config Name="Behind HTTPS" Target="FETCHLY_BEHIND_HTTPS" Default="0|1" Mode="" Description="Set to 1 when a reverse proxy serves fetchly over HTTPS so session cookies are marked Secure." Type="Variable" Display="advanced" Required="false" Mask="false">0</Config>
+  <Config Name="Trusted Proxy IPs" Target="FORWARDED_ALLOW_IPS" Default="127.0.0.1,::1" Mode="" Description="Comma-separated IPs or CIDRs of trusted reverse proxies. Set this to the proxy address as seen by the container; wildcard is rejected." Type="Variable" Display="advanced" Required="false" Mask="false">127.0.0.1,::1</Config>
+  <Config Name="Log Level" Target="LOG_LEVEL" Default="info|debug|warning|error" Mode="" Description="Container log verbosity. Use debug only while troubleshooting." Type="Variable" Display="advanced" Required="false" Mask="false">info</Config>
+  <Config Name="Worker Timeout (s)" Target="TIMEOUT" Default="60" Mode="" Description="Gunicorn worker timeout in seconds." Type="Variable" Display="advanced" Required="false" Mask="false">60</Config>
 </Container>

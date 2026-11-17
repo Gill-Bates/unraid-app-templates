@@ -10,23 +10,26 @@
   <Privileged>false</Privileged>
   <Support>https://github.com/Gill-Bates/fritzfluxdb/issues</Support>
   <Project>https://github.com/Gill-Bates/fritzfluxdb</Project>
-  <Overview>Daemon that reads metrics from an AVM Fritz!Box (DSL/Cable, WLAN, VPN, home automation, logs) and writes them to InfluxDB v1, InfluxDB v2, or QuestDB. No Web UI. Configured entirely via environment variables. Grafana dashboards included.&#13;
+  <ReadMe>https://gill-bates.github.io/fritzfluxdb/getting-started/installation/</ReadMe>
+  <Overview>Give your FRITZ!Box a history. fritzFluxDB collects DSL/cable, Wi-Fi, VPN, call, smart-home and router data and sends it to InfluxDB or QuestDB.&#13;
 &#13;
-Pick your backend with "Database Type", then fill in the shared "Database ..." fields. QuestDB Open Source supports optional HTTP basic authentication, not API tokens.&#13;
+Import the included Grafana dashboards to follow trends. When the WAN drops, fritzFluxDB records the interruption and a likely cause to help you investigate.&#13;
 &#13;
-Source: https://github.com/Gill-Bates/fritzfluxdb</Overview>
+Choose InfluxDB v1/v2 or QuestDB 10+ during installation. The collector runs in the background with no Web UI or inbound ports.&#13;
+&#13;
+Upgrading from before 2.0.0? Use a fresh QuestDB instance or a new InfluxDB database/bucket and re-import the dashboards; existing data is not migrated.</Overview>
   <Category>Network:Other Tools:Utilities</Category>
   <WebUI/>
   <TemplateURL>https://raw.githubusercontent.com/Gill-Bates/unraid-app-templates/main/templates/01_fritzfluxdb.xml</TemplateURL>
   <Icon>https://raw.githubusercontent.com/Gill-Bates/unraid-app-templates/main/icons/01_fritzboxinflux.png</Icon>
-  <ExtraParams>--restart unless-stopped</ExtraParams>
+  <ExtraParams>--restart unless-stopped --health-cmd='kill -0 "$(cat /tmp/fritzfluxdb.pid 2>/dev/null)" 2>/dev/null || exit 1' --health-interval=30s --health-timeout=10s --health-retries=3 --health-start-period=15s</ExtraParams>
   <PostArgs/>
   <CPUset/>
-  <Date>2026-09-29</Date>
-  <Changes>Removed the obsolete Fritz!Box TLS controls; the daemon detects HTTPS/HTTP automatically. Clarified that the API token is for InfluxDB v2 only and QuestDB Open Source uses optional HTTP basic authentication. Set the QuestDB retention default to 365 days and added the optional QuestDB downsampling profile and VPN address metrics setting. Database connection settings remain shared through INFLUXDB_*; QuestDB-specific settings use QUESTDB_* aliases.</Changes>
+  <Date>2026-11-17</Date>
+  <Changes>Version 2.0 adds WAN interruption insights and refreshed Grafana dashboards. This template adds a health indicator, WAN watch settings and optional FRITZ!Box certificate verification.</Changes>
 
   <!-- ── App Settings ─────────────────────────────────────────── -->
-  <Config Name="Timezone" Target="TZ" Default="Europe/Berlin" Mode="" Description="Container timezone (e.g. Europe/Berlin, Etc/UTC). Fritz!Box timezone is auto-detected at startup." Type="Variable" Display="always" Required="false" Mask="false">Europe/Berlin</Config>
+  <Config Name="Timezone" Target="TZ" Default="Europe/Berlin" Mode="" Description="Container and log timezone (e.g. Europe/Berlin, Etc/UTC). Set the Fritz!Box timezone separately to match the router." Type="Variable" Display="always" Required="false" Mask="false">Europe/Berlin</Config>
   <Config Name="Log Level" Target="LOG_LEVEL" Default="INFO|DEBUG|WARNING|ERROR" Mode="" Description="Log level." Type="Variable" Display="advanced" Required="false" Mask="false">INFO</Config>
 
   <!-- ── Fritz!Box Settings ────────────────────────────────────── -->
@@ -36,8 +39,11 @@ Source: https://github.com/Gill-Bates/fritzfluxdb</Overview>
   <Config Name="Fritz!Box Port" Target="FRITZBOX_PORT" Default="49000" Mode="" Description="Fritz!Box TR-064 port." Type="Variable" Display="advanced" Required="false" Mask="false">49000</Config>
   <Config Name="Fritz!Box Connect Timeout (s)" Target="FRITZBOX_CONNECT_TIMEOUT" Default="10" Mode="" Description="Connection timeout in seconds." Type="Variable" Display="advanced" Required="false" Mask="false">10</Config>
   <Config Name="Fritz!Box Request Interval (s)" Target="FRITZBOX_REQUEST_INTERVAL" Default="10" Mode="" Description="Seconds between TR-064 poll cycles (minimum 10)." Type="Variable" Display="advanced" Required="false" Mask="false">10</Config>
+  <Config Name="WAN Watch Interval (s)" Target="FRITZBOX_WAN_WATCH_INTERVAL" Default="5" Mode="" Description="Seconds between WAN and DSL status checks for interruption classification. Use 0 to disable; otherwise 2 to 60. Independent of the request interval." Type="Variable" Display="advanced" Required="false" Mask="false">5</Config>
   <Config Name="Fritz!Box Box Tag" Target="FRITZBOX_BOX_TAG" Default="fritz.box" Mode="" Description="Custom tag to identify the Fritz!Box." Type="Variable" Display="advanced" Required="false" Mask="false">fritz.box</Config>
-  <Config Name="Fritz!Box Timezone" Target="FRITZBOX_TIMEZONE" Default="Europe/Berlin" Mode="" Description="Fallback timezone for Fritz!Box log timestamps if auto-detection fails." Type="Variable" Display="advanced" Required="false" Mask="false">Europe/Berlin</Config>
+  <Config Name="Fritz!Box Timezone" Target="FRITZBOX_TIMEZONE" Default="Europe/Berlin" Mode="" Description="IANA timezone configured on the Fritz!Box, used for router log and call timestamps. The daemon checks its offset at startup but does not auto-detect the timezone." Type="Variable" Display="advanced" Required="false" Mask="false">Europe/Berlin</Config>
+  <Config Name="Fritz!Box CA Certificate (host path)" Target="/etc/fritzfluxdb/fritzbox-ca.pem" Default="" Mode="ro" Description="Optional existing PEM certificate or CA file on the Unraid host. Mounts read-only at /etc/fritzfluxdb/fritzbox-ca.pem; leave empty if unused." Type="Path" Display="advanced" Required="false" Mask="false"/>
+  <Config Name="Fritz!Box CA File (container path)" Target="FRITZBOX_CA_FILE" Default="" Mode="" Description="Set to /etc/fritzfluxdb/fritzbox-ca.pem when a host certificate is mapped above. Verifies the Fritz!Box HTTPS Lua endpoint; leave empty if unused." Type="Variable" Display="advanced" Required="false" Mask="false"/>
   <Config Name="Include VPN Address Metrics" Target="FRITZFLUXDB_INCLUDE_VPN_ADDRESS_METRICS" Default="" Mode="" Description="Leave empty to exclude VPN address metrics; enter 1, true, yes, or on to include them." Type="Variable" Display="advanced" Required="false" Mask="false"/>
 
   <!-- ── Database Settings (one shared set for InfluxDB v1/v2 + QuestDB) ── -->
@@ -47,7 +53,7 @@ Source: https://github.com/Gill-Bates/fritzfluxdb</Overview>
   <Config Name="Database TLS" Target="INFLUXDB_TLS_ENABLED" Default="false|true" Mode="" Description="Enable TLS (HTTPS) for the database connection." Type="Variable" Display="advanced" Required="false" Mask="false">false</Config>
   <Config Name="Database Verify TLS" Target="INFLUXDB_VERIFY_TLS" Default="true|false" Mode="" Description="Verify the database TLS certificate." Type="Variable" Display="advanced" Required="false" Mask="false">true</Config>
   <Config Name="Database Allow Plaintext Credentials" Target="INFLUXDB_ALLOW_PLAINTEXT_CREDENTIALS" Default="false|true" Mode="" Description="Allow sending credentials/token over plain HTTP to a remote host (trusted networks only)." Type="Variable" Display="advanced" Required="false" Mask="false">false</Config>
-  <Config Name="Measurement / Table Name" Target="INFLUXDB_MEASUREMENT_NAME" Default="fritzbox" Mode="" Description="InfluxDB measurement resp. QuestDB table name (overridden by the Fritz!Box serial number if available)." Type="Variable" Display="advanced" Required="false" Mask="false">fritzbox</Config>
+  <Config Name="Measurement / Table Base Name" Target="INFLUXDB_MEASUREMENT_NAME" Default="fritzbox" Mode="" Description="InfluxDB measurement or QuestDB table base name. The Fritz!Box serial normally replaces it; QuestDB then creates separate &lt;name&gt;_metrics and &lt;name&gt;_events tables." Type="Variable" Display="advanced" Required="false" Mask="false">fritzbox</Config>
 
   <!-- ── Database Credentials ──────────────────────────────────── -->
   <Config Name="Database Name (InfluxDB v1)" Target="INFLUXDB_DATABASE" Default="" Mode="" Description="InfluxDB v1 database name. Required for DB_TYPE=influxdb_v1, ignored otherwise." Type="Variable" Display="always" Required="false" Mask="false"/>
@@ -56,7 +62,7 @@ Source: https://github.com/Gill-Bates/fritzfluxdb</Overview>
   <Config Name="Token (InfluxDB v2)" Target="INFLUXDB_TOKEN" Default="" Mode="" Description="InfluxDB v2 API token (required for DB_TYPE=influxdb_v2). QuestDB Open Source does not support API tokens." Type="Variable" Display="always" Required="false" Mask="true"/>
   <Config Name="Organization (InfluxDB v2)" Target="INFLUXDB_ORGANIZATION" Default="" Mode="" Description="InfluxDB v2 organization name. Required for DB_TYPE=influxdb_v2, ignored otherwise." Type="Variable" Display="always" Required="false" Mask="false"/>
   <Config Name="Bucket (InfluxDB v2)" Target="INFLUXDB_BUCKET" Default="" Mode="" Description="InfluxDB v2 bucket. Required for DB_TYPE=influxdb_v2, ignored otherwise." Type="Variable" Display="always" Required="false" Mask="false"/>
-  <Config Name="Data Retention (days, QuestDB only)" Target="INFLUXDB_DATA_RETENTION_DAYS" Default="365" Mode="" Description="QuestDB only: TTL in days, applied only to a table without an existing TTL; 0 disables it (requires QuestDB 8.2.2+). Ignored for InfluxDB." Type="Variable" Display="advanced" Required="false" Mask="false">365</Config>
+  <Config Name="Data Retention (days, QuestDB only)" Target="INFLUXDB_DATA_RETENTION_DAYS" Default="365" Mode="" Description="QuestDB 10 or newer only: TTL in days; 0 disables it. The raw metrics table gets a TTL only if it has none. Ignored for InfluxDB." Type="Variable" Display="advanced" Required="false" Mask="false">365</Config>
   <Config Name="Downsampling (QuestDB only)" Target="QUESTDB_DOWNSAMPLING" Default="" Mode="" Description="Optional QuestDB rollup profile: low (30 days raw, 1-minute rollup), medium (7 days raw, 1-minute rollup), or high (1 day raw, 5-minute rollup). Leave empty to disable." Type="Variable" Display="advanced" Required="false" Mask="false"/>
 
   <TailscaleStateDir/>

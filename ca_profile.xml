@@ -6,15 +6,18 @@
 
     This repository provides ready-to-use templates for the following Docker containers:
 
-    - **fritzinfluxdb** — Pushes Fritz!Box router call and connection data to InfluxDB for Grafana visualisation.
+    - **fritzfluxdb** — Sends FRITZ!Box connection and device data to InfluxDB or QuestDB for Grafana dashboards.
     - **Velociraptor** — DFIR (Digital Forensics &amp; Incident Response) server with auto-generated config, multi-arch client repacks and a full web GUI.
     - **UniFi OS Server** — Full UniFi OS stack (Network Application, Identity Hub, PostgreSQL, MongoDB, RabbitMQ, nginx) running as a single Docker container with systemd.
+    - **fetchly** — Saves video and audio from supported platforms with live download progress and optional audio tools.
+    - **rct-manager** — Provides an API and admin interface for RCT Power inverters.
+    - **justUp!** — Monitors sites, hosts, ports and certificates with alerts and reports.
 
     For support, bug reports, or template requests please open an issue on GitHub.
   </Profile>
 
   <!-- Icon shown on the maintainer profile page in Community Apps -->
-  <Icon>https://raw.githubusercontent.com/Gill-Bates/unraid-app-templates/main/icon.svg</Icon>
+  <Icon>https://raw.githubusercontent.com/Gill-Bates/unraid-app-templates/main/icons/gill-bates.png</Icon>
 
   <!-- Primary homepage for this repository -->
   <WebPage>https://github.com/Gill-Bates/unraid-app-templates</WebPage>

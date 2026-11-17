@@ -14,3 +14,7 @@ Thumbs.db
 *.tmp
 *.bak
 *.orig
+
+# Agents
+.omc/
+*.claude/

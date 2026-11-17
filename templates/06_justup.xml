@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<Container version="2">
+  <Name>justup</Name>
+  <Repository>giiibates/justup:latest</Repository>
+  <Registry>https://hub.docker.com/r/giiibates/justup</Registry>
+  <Network>bridge</Network>
+  <MyIP/>
+  <Shell>bash</Shell>
+  <Privileged>false</Privileged>
+  <Support>https://github.com/Gill-Bates/justup/issues</Support>
+  <Project>https://github.com/Gill-Bates/justup</Project>
+  <ReadMe>https://gill-bates.github.io/justup/getting-started/quick-start/</ReadMe>
+  <Overview>Know when a service goes down and what happened around it. justUp! checks websites, APIs, hosts, TCP/UDP ports and TLS certificates from one self-hosted dashboard.&#13;
+&#13;
+Get alerts by email or Signal, inspect route changes and export PDF availability reports. A quality gate pauses checks when your own connection fails, reducing false alarms. One container, built-in SQLite, no external database or agent.&#13;
+&#13;
+Set a persistent Secret Key before installing. Sign in as admin with the temporary password from the container log, then change it at first login.</Overview>
+  <Category>Network:Other Tools:Utilities</Category>
+  <WebUI>http://[IP]:[PORT:8000]</WebUI>
+  <TemplateURL>https://raw.githubusercontent.com/Gill-Bates/unraid-app-templates/main/templates/06_justup.xml</TemplateURL>
+  <Icon>https://raw.githubusercontent.com/Gill-Bates/unraid-app-templates/main/icons/06_justup.png</Icon>
+  <ExtraParams>--init --restart unless-stopped --stop-timeout 60 --security-opt no-new-privileges:true --cap-drop ALL --cap-add CHOWN --cap-add FOWNER --cap-add SETUID --cap-add SETGID --cap-add NET_RAW --tmpfs /app/data/pdf_reports:size=256m,mode=0700</ExtraParams>
+  <PostArgs/>
+  <CPUset/>
+  <Date>2026-11-17</Date>
+  <Changes>Initial Unraid template with persistent data, a Web UI port and the container's recommended runtime settings.</Changes>
+
+  <Config Name="Secret Key" Target="SECRET_KEY" Default="" Mode="" Description="Required persistent Fernet key for stored secrets, sessions and backups. Generate with: openssl rand -base64 32 | tr '+/' '-_'. Keep it when updating." Type="Variable" Display="always" Required="true" Mask="true"/>
+  <Config Name="Web UI Port" Target="8000" Default="8000" Mode="tcp" Description="Host port for the justUp! dashboard; the container listens on port 8000." Type="Port" Display="always" Required="true" Mask="false">8000</Config>
+  <Config Name="Persistent Data" Target="/app/data" Default="/mnt/user/appdata/justup" Mode="rw" Description="SQLite database, monitoring history, settings, Signal data and GeoIP cache. Keep this path when updating." Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/justup</Config>
+  <Config Name="User ID" Target="PUID" Default="1000" Mode="" Description="Numeric UID that owns the data directory and runs the app. Cannot be 0 or 10001." Type="Variable" Display="advanced" Required="false" Mask="false">1000</Config>
+  <Config Name="Group ID" Target="PGID" Default="1000" Mode="" Description="Numeric GID that owns the data directory. Cannot be 0 or 10001." Type="Variable" Display="advanced" Required="false" Mask="false">1000</Config>
+  <Config Name="Trusted Proxy IPs" Target="TRUSTED_PROXIES" Default="" Mode="" Description="Optional comma-separated reverse-proxy IPs or networks as seen by the container. Leave empty when no proxy is used." Type="Variable" Display="advanced" Required="false" Mask="false"/>
+  <Config Name="Key Rotation List" Target="SECRET_KEYS" Default="" Mode="" Description="Optional comma-separated Fernet keys, new primary key first. Use only when rotating the Secret Key; keep old keys until their stored data has been re-encrypted." Type="Variable" Display="advanced" Required="false" Mask="true"/>
+  <Config Name="Log Level" Target="LOG_LEVEL" Default="INFO|DEBUG|WARNING|ERROR|CRITICAL" Mode="" Description="Container log verbosity. Access lines appear only at DEBUG." Type="Variable" Display="advanced" Required="false" Mask="false">INFO</Config>
+  <Config Name="Signal Java Initial Heap" Target="JAVA_XMS" Default="64m" Mode="" Description="Initial Java heap for the bundled Signal integration." Type="Variable" Display="advanced" Required="false" Mask="false">64m</Config>
+  <Config Name="Signal Java Maximum Heap" Target="JAVA_XMX" Default="256m" Mode="" Description="Maximum Java heap for the bundled Signal integration." Type="Variable" Display="advanced" Required="false" Mask="false">256m</Config>
+</Container>
