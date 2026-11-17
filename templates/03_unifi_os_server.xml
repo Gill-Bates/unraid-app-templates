@@ -9,37 +9,12 @@
   <Privileged>false</Privileged>
   <Support>https://forums.unraid.net/forum/47-docker-containers/</Support>
   <Project>https://github.com/Gill-Bates/unifi-os-server</Project>
-  <Overview>UniFi OS Server running in Docker with full systemd-based service management.
-
-Includes the UniFi Network Application, identity hub, credential server, and all supporting services (PostgreSQL, MongoDB, RabbitMQ, nginx).
-
-Requirements:
-  - Unraid 6.12 or newer (cgroup v2 required)
-  - At least 4 GB RAM (6-8 GB recommended)
-  - Persistent storage configured for all listed paths
-
-IMPORTANT - Device Adoption:
-  - Set UOS_SYSTEM_IP to the IP address or hostname of your Docker host.
-  - Without this, UniFi devices cannot be adopted.
-
-First Boot:
-  - All services take 3-5 minutes to initialize on first start.
-  - Do not access the GUI until startup is complete.
-  - Monitor progress: Unraid Docker tab -> Container log, or:  docker logs -f unifi-os-server
-
-GUI Access:
-https://[your-unraid-ip]:11443
-Note: The GUI uses a self-signed certificate. Accept the browser security warning to proceed.
-
-Troubleshooting:
-docker logs -f unifi-os-server
-docker exec -it unifi-os-server systemctl list-jobs
-docker exec -it unifi-os-server ss -tulpn
-docker exec -it unifi-os-server journalctl -u unifi-core -f
-docker exec -it unifi-os-server journalctl -u postgresql -f
-
-Source: https://github.com/giiibates/unifi-os-server
-  </Overview>
+  <ReadMe>https://github.com/Gill-Bates/unifi-os-server#readme</ReadMe>
+  <Overview>Run UniFi OS Server on Unraid in one container. Manage your network and device adoption through the UniFi OS interface, with Identity Hub and the supporting services bundled together.&#13;
+&#13;
+Set UOS_SYSTEM_IP to a hostname or host IP your devices can reach. The container needs cgroup v2 and persistent data mounts. First boot can take several minutes.&#13;
+&#13;
+Open the HTTPS Web UI after startup; its default certificate is self-signed.</Overview>
   <Category>Network:Management</Category>
   <WebUI>https://[IP]:[PORT:443]</WebUI>
   <TemplateURL>https://raw.githubusercontent.com/Gill-Bates/unraid-app-templates/main/templates/03_unifi_os_server.xml</TemplateURL>
@@ -47,158 +22,8 @@ Source: https://github.com/giiibates/unifi-os-server
   <ExtraParams>--restart unless-stopped --cgroupns=host --cap-add=NET_RAW --cap-add=NET_ADMIN --stop-signal SIGRTMIN+3 --tmpfs /run:exec --tmpfs /run/lock --tmpfs /tmp:exec --tmpfs /var/lib/journal --tmpfs /var/opt/unifi/tmp:size=64m</ExtraParams>
   <PostArgs/>
   <CPUset/>
-  <Date>2026-09-14</Date>
-  <Changes>Show systemd journal in Docker logs and Hardware Platform now render as dropdowns instead of free text.</Changes>
-  <Networking>
-    <Mode>bridge</Mode>
-    <Publish>
-      <Port>
-        <HostPort>11443</HostPort>
-        <ContainerPort>443</ContainerPort>
-        <Protocol>tcp</Protocol>
-      </Port>
-      <Port>
-        <HostPort>8080</HostPort>
-        <ContainerPort>8080</ContainerPort>
-        <Protocol>tcp</Protocol>
-      </Port>
-      <Port>
-        <HostPort>8443</HostPort>
-        <ContainerPort>8443</ContainerPort>
-        <Protocol>tcp</Protocol>
-      </Port>
-      <Port>
-        <HostPort>8444</HostPort>
-        <ContainerPort>8444</ContainerPort>
-        <Protocol>tcp</Protocol>
-      </Port>
-      <Port>
-        <HostPort>3478</HostPort>
-        <ContainerPort>3478</ContainerPort>
-        <Protocol>udp</Protocol>
-      </Port>
-      <Port>
-        <HostPort>10003</HostPort>
-        <ContainerPort>10003</ContainerPort>
-        <Protocol>udp</Protocol>
-      </Port>
-      <Port>
-        <HostPort>5005</HostPort>
-        <ContainerPort>5005</ContainerPort>
-        <Protocol>tcp</Protocol>
-      </Port>
-      <Port>
-        <HostPort>6789</HostPort>
-        <ContainerPort>6789</ContainerPort>
-        <Protocol>tcp</Protocol>
-      </Port>
-      <Port>
-        <HostPort>9543</HostPort>
-        <ContainerPort>9543</ContainerPort>
-        <Protocol>tcp</Protocol>
-      </Port>
-      <Port>
-        <HostPort>11084</HostPort>
-        <ContainerPort>11084</ContainerPort>
-        <Protocol>tcp</Protocol>
-      </Port>
-      <Port>
-        <HostPort>5671</HostPort>
-        <ContainerPort>5671</ContainerPort>
-        <Protocol>tcp</Protocol>
-      </Port>
-      <Port>
-        <HostPort>8880</HostPort>
-        <ContainerPort>8880</ContainerPort>
-        <Protocol>tcp</Protocol>
-      </Port>
-      <Port>
-        <HostPort>8881</HostPort>
-        <ContainerPort>8881</ContainerPort>
-        <Protocol>tcp</Protocol>
-      </Port>
-      <Port>
-        <HostPort>8882</HostPort>
-        <ContainerPort>8882</ContainerPort>
-        <Protocol>tcp</Protocol>
-      </Port>
-      <Port>
-        <HostPort>5514</HostPort>
-        <ContainerPort>5514</ContainerPort>
-        <Protocol>udp</Protocol>
-      </Port>
-    </Publish>
-  </Networking>
-  <Data>
-    <Volume>
-      <HostDir>/sys/fs/cgroup</HostDir>
-      <ContainerDir>/sys/fs/cgroup</ContainerDir>
-      <Mode>rw</Mode>
-    </Volume>
-    <Volume>
-      <HostDir>/mnt/user/docker/unifi-os/persistent</HostDir>
-      <ContainerDir>/persistent</ContainerDir>
-      <Mode>rw</Mode>
-    </Volume>
-    <Volume>
-      <HostDir>/mnt/user/docker/unifi-os/logs</HostDir>
-      <ContainerDir>/var/log</ContainerDir>
-      <Mode>rw</Mode>
-    </Volume>
-    <Volume>
-      <HostDir>/mnt/user/docker/unifi-os/data</HostDir>
-      <ContainerDir>/data</ContainerDir>
-      <Mode>rw</Mode>
-    </Volume>
-    <Volume>
-      <HostDir>/mnt/user/docker/unifi-os/srv</HostDir>
-      <ContainerDir>/srv</ContainerDir>
-      <Mode>rw</Mode>
-    </Volume>
-    <Volume>
-      <HostDir>/mnt/user/docker/unifi-os/lib-unifi</HostDir>
-      <ContainerDir>/var/lib/unifi</ContainerDir>
-      <Mode>rw</Mode>
-    </Volume>
-    <Volume>
-      <HostDir>/mnt/user/docker/unifi-os/lib-postgresql</HostDir>
-      <ContainerDir>/var/lib/postgresql</ContainerDir>
-      <Mode>rw</Mode>
-    </Volume>
-    <Volume>
-      <HostDir>/mnt/user/docker/unifi-os/lib-mongodb</HostDir>
-      <ContainerDir>/var/lib/mongodb</ContainerDir>
-      <Mode>rw</Mode>
-    </Volume>
-    <Volume>
-      <HostDir>/mnt/user/docker/unifi-os/rabbitmq-ssl</HostDir>
-      <ContainerDir>/etc/rabbitmq/ssl</ContainerDir>
-      <Mode>rw</Mode>
-    </Volume>
-  </Data>
-  <Environment>
-    <Variable>
-      <Name>UOS_SYSTEM_IP</Name>
-      <Value></Value>
-      <Mode/>
-    </Variable>
-    <Variable>
-      <Name>HARDWARE_PLATFORM</Name>
-      <Value></Value>
-      <Mode/>
-    </Variable>
-    <Variable>
-      <Name>UOS_SHOW_JOURNAL</Name>
-      <Value>false</Value>
-      <Mode/>
-    </Variable>
-    <Variable>
-      <Name>TZ</Name>
-      <Value>UTC</Value>
-      <Mode/>
-    </Variable>
-  </Environment>
-  <!-- Configurations -->
+  <Date>2026-11-17</Date>
+  <Changes>Added the missing optional service ports and shortened the installation guidance.</Changes>
   <Config Name="UOS System IP/Hostname" Target="UOS_SYSTEM_IP" Default="" Mode="" Description="REQUIRED: IP address or hostname of your Docker host (e.g. 192.168.1.10). Used for UniFi device adoption and remote management." Type="Variable" Display="always" Required="true" Mask="false" />
   <Config Name="Hardware Platform" Target="HARDWARE_PLATFORM" Default="|synology" Mode="" Description="Leave empty for standard hardware, or set to 'synology' if running on a Synology NAS." Type="Variable" Display="always" Required="false" Mask="false"></Config>
   <Config Name="Show systemd journal in Docker logs" Target="UOS_SHOW_JOURNAL" Default="false|true" Mode="" Description="Forward the full systemd journal to Docker logs. Default false shows only the startup banner and entrypoint summary." Type="Variable" Display="always" Required="false" Mask="false">false</Config>
@@ -212,6 +37,12 @@ Source: https://github.com/giiibates/unifi-os-server
   <Config Name="RTP" Target="5005" Default="5005" Mode="tcp" Description="Real-time Transport Protocol" Type="Port" Display="always" Required="false" Mask="false" />
   <Config Name="Mobile Speed Test" Target="6789" Default="6789" Mode="tcp" Description="UniFi mobile speed test" Type="Port" Display="always" Required="false" Mask="false" />
   <Config Name="Identity Hub" Target="9543" Default="9543" Mode="tcp" Description="UniFi Identity Hub" Type="Port" Display="always" Required="false" Mask="false" />
+  <Config Name="Site Supervisor" Target="11084" Default="11084" Mode="tcp" Description="Optional UniFi Site Supervisor service." Type="Port" Display="advanced" Required="false" Mask="false">11084</Config>
+  <Config Name="AMQPS" Target="5671" Default="5671" Mode="tcp" Description="Optional secure messaging service." Type="Port" Display="advanced" Required="false" Mask="false">5671</Config>
+  <Config Name="Hotspot Redirect 8880" Target="8880" Default="8880" Mode="tcp" Description="Optional hotspot portal redirect port." Type="Port" Display="advanced" Required="false" Mask="false">8880</Config>
+  <Config Name="Hotspot Redirect 8881" Target="8881" Default="8881" Mode="tcp" Description="Optional hotspot portal redirect port." Type="Port" Display="advanced" Required="false" Mask="false">8881</Config>
+  <Config Name="Hotspot Redirect 8882" Target="8882" Default="8882" Mode="tcp" Description="Optional hotspot portal redirect port." Type="Port" Display="advanced" Required="false" Mask="false">8882</Config>
+  <Config Name="Remote Syslog" Target="5514" Default="5514" Mode="udp" Description="Optional remote syslog capture port." Type="Port" Display="advanced" Required="false" Mask="false">5514</Config>
   <Config Name="cgroup (systemd)" Target="/sys/fs/cgroup" Default="/sys/fs/cgroup" Mode="rw" Description="REQUIRED: read-write cgroup mount for systemd as PID 1. Without this the container does not start unless Privileged=true." Type="Path" Display="advanced" Required="true" Mask="false">/sys/fs/cgroup</Config>
   <Config Name="Persistent Data" Target="/persistent" Default="/mnt/user/docker/unifi-os/persistent" Mode="rw" Description="Path for persistent container data" Type="Path" Display="always" Required="true" Mask="false" />
   <Config Name="Logs" Target="/var/log" Default="/mnt/user/docker/unifi-os/logs" Mode="rw" Description="Path for container logs" Type="Path" Display="always" Required="true" Mask="false" />

@@ -56,14 +56,13 @@ LICENSE          MIT License
 
 Before requesting a review, run **Validate** and **Scan** in the Community Applications submission flow.
 
-## Contributing
-
-1. Fork this repository.
-2. Add or update a template in `templates/` and its icon in `icons/`.
-3. Open a pull request with a short description.
-
-Suggestions for new apps are welcome as [issues](https://github.com/Gill-Bates/unraid-app-templates/issues).
-
 ## License
 
 Released under the [MIT License](LICENSE).
+
+<br>
+<p align="center">
+  <a href="https://www.buymeacoffee.com/tnsteinerx">
+    <img src="https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20beer&emoji=%F0%9F%8D%BA&slug=tnsteinerx&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff" alt="Buy Me A Coffee">
+  </a>
+</p>
